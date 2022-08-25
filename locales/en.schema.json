@@ -1,0 +1,24 @@
+{
+  "appBlock": {
+    "block": {
+      "name": "App Block",
+      "settings":{
+        "title": {
+          "label": "Title",
+          "info":"This is a Title"
+        }
+      }
+    },
+    "embed": {
+      "name": "App Embed Block",
+      "settings": {
+        "showButton": {
+          "label": "Show Button"
+        },
+        "buttonText": {
+          "label": "Button Text"
+        }
+      }
+    }
+  }
+}

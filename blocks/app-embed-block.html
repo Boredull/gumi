@@ -1,0 +1,38 @@
+<div class="app-embed-block__container" data-id="{{ block.id }}" data-type="app-embed-block">
+  <p>{{ t 'app_embed_block.page_title' }}</p>
+  {{#if block.settings.showButton }}
+  <div class="app-embed-block__wrapper">
+    <button type="button" class="app-embed-block__button">{{ block.settings.buttonText }}</button>
+  </div>
+  {{/if}}
+</div>
+
+<style>
+.app-embed-block__container .app-embed-block__button {
+  background: url('{{ assets_url "sheep.jpg" }}') no-repeat center;
+}
+</style>
+
+{{#schema}}
+{
+  "name": "t:appBlock.embed.name",
+  "target": "body",
+  "javascript": ["app-embed-block.js"],
+  "stylesheet": ["app-embed-block.css"],
+  "templates": [],
+  "settings": [
+    {
+      "type": "switch",
+      "id": "showButton",
+      "label": "t:appBlock.embed.settings.showButton.label",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "buttonText",
+      "label": "t:appBlock.embed.settings.buttonText.label",
+      "default": "Click Button"
+    }
+  ]
+}
+{{/schema}}

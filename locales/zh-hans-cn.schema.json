@@ -1,0 +1,24 @@
+{
+  "appBlock": {
+    "block": {
+      "name": "应用块",
+      "settings":{
+        "title": {
+          "label": "标题",
+          "info":"这是一个标题"
+        }
+      }
+    },
+    "embed": {
+      "name": "应用嵌入块",
+      "settings": {
+        "showButton": {
+          "label": "显示按钮"
+        },
+        "buttonText": {
+          "label": "按钮文本"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,78 @@
+.theme-app-extension__app-block h1 {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+* {
+  box-sizing: border-box; }
+
+.hello-week {
+  width: 100%;
+  margin: 0 auto;
+  user-select: none;
+  font-size: 1em; }
+  .hello-week .navigation {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0; }
+  .hello-week .prev,
+  .hello-week .next {
+    padding: 1em;
+    cursor: pointer; }
+  .hello-week .period {
+    width: 100%;
+    font-size: 1.2em;
+    font-weight: 400;
+    text-align: center; }
+  .hello-week .week {
+    display: flex;
+    font-size: 0.9em; }
+    .hello-week .week.rtl {
+      flex-direction: row-reverse; }
+  .hello-week .month {
+    display: flex;
+    flex-wrap: wrap;
+    padding: .4em 0;
+    cursor: pointer; }
+    .hello-week .month.rtl {
+      flex-direction: row-reverse; }
+  .hello-week .day {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100% / 7);
+    padding: 1em;
+    cursor: pointer; }
+    .hello-week .day.is-disabled {
+      cursor: not-allowed;
+      opacity: 0.3; }
+
+
+      .hello-week .week {
+        color: #42a298;
+        font-size: 1.2em; }
+      
+      .hello-week .day.is-weekend {
+        color: #ff3860; }
+      
+      .hello-week .day.is-highlight {
+        background-color: #8fbc8f;
+        color: #fff; }
+      
+      .hello-week .day.is-today {
+        background-color: #ff3860;
+        color: #fff; }
+      
+      .hello-week .day.is-selected {
+        background-color: #7fcbc3 !important;
+        color: #fff !important; }
+      
+      .hello-week .day.is-begin-range, .hello-week .day.is-end-range {
+        background-color: #42a298 !important;
+        color: #fff !important; }
+      
+      .hello-week .day.is-disabled {
+        cursor: not-allowed;
+        opacity: .33; }

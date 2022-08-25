@@ -1,0 +1,24 @@
+{
+  "appBlock": {
+    "block": {
+      "name": "應用塊",
+      "settings":{
+        "title": {
+          "label": "標題",
+          "info":"這是一個標題"
+        }
+      }
+    },
+    "embed": {
+      "name": "應用嵌入塊",
+      "settings": {
+        "showButton": {
+          "label": "顯示按鈕"
+        },
+        "buttonText": {
+          "label": "按鈕文本"
+        }
+      }
+    }
+  }
+}
