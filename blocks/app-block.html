@@ -1,66 +1,90 @@
 <div class="theme-app-extension__app-block" data-id="{{ block.id }}">
-  <div style="text-align:center; font-size:16px;font-weight:bolder">Select appointment</div>
-    <div
-      class="information"
-      style="gap: 16px; margin-bottom: 16px"
-    >
+  <div style="text-align: center; font-size: 16px; font-weight: bolder">
+    Select appointment
+  </div>
+  <div class="information" style="gap: 16px; margin-bottom: 16px">
     <!-- Select location -->
-      <div style="vertical-align: middle; font-size: 1.2em">
-        <!-- <span style="color: red">*</span> -->
-        <div>Select location</div>
-        <select class="location" style="min-width: 700px;text-align: center; height: 2.2em">
-          <option value="Choose any">测试地点2</option>
-          <option >测试1</option>
-        </select>
-      </div>
-      <div style="vertical-align: middle; font-size: 16px">
-        <!-- <span style="color: red">*</span> -->
-        <div>Select resource</div>
-        <select
-          class="resource"
-          style="min-width: 700px;text-align: center; height: 60px"
-        >
+    <div style="vertical-align: middle; font-size: 16px">
+      <!-- <span style="color: red">*</span> -->
+      <div style="margin: 10px 0">Select location</div>
+      <select
+        class="location"
+        style="min-height: 40px; width: 100%; border-radius: 5px;padding-left:5px"
+      >
+        <option value="Choose any" >
+          测试地点2
+      </option>
+        <option >测试1</option>
+      </select>
+    </div>
+    <div style="vertical-align: middle; font-size: 16px">
+      <!-- <span style="color: red">*</span> -->
+      <div style="margin: 10px 0">Select resource</div>
+      <select
+        class="resource"
+        style="min-height: 40px; width: 100%; border-radius: 5px;
+        padding-left:5px"
+      >
         <option value="none" selected disabled hidden>Choose any</option>
-        <option value="Choose any">测试容量1</option>
+        <option value="1" >测试容量1</option>
         <option >测试容量2</option>
-        </select>
-      </div>
+      </select>
     </div>
-    <div class="calendar"></div>
-    <div>
-        <select
-          style="min-width: 700px;text-align: center; height: 60px" 
-        >
-        <option value="1">9:00 am - 10:00 am</option>
-        <option value="2">10:00 am - 11:00 am</option>
-        <option value="3">12:00 am - 1:00 pm</option>
-        <option value="4">1:00 am - 2:00 am</option>
-        <option value="5">2:00 am - 3:00 am</option>
-        <option value="6">3:00 am - 4:00 am</option>
-        <option value="7">4:00 am - 5:00 am</option>
-        </select>
-    </div>
-    <div class="price" style="display:float;float:right">
-        Price: 20,00
-    </div>
+  </div>
+  <div class="calendar"></div>
+  <div>
+    <select
+      style="
+        text-align: center;
+        min-height: 40px;
+        width: 100%;
+        border-radius: 5px;
+      "
+    >
+      <option value="1" >9:00 am - 10:00 am</option>
+      <option value="2" >10:00 am - 11:00 am</option>
+      <option value="3" >12:00 am - 1:00 pm</option>
+      <option value="4" >1:00 am - 2:00 am</option>
+      <option value="5" >2:00 am - 3:00 am</option>
+      <option value="6" >3:00 am - 4:00 am</option>
+      <option value="7" >4:00 am - 5:00 am</option>
+    </select>
+  </div>
+  <div
+    class="price"
+    style="
+      display: float;
+      float: right;
+      font-size: 16px;
+      font-weight: bold;
+      margin: 10px 0;
+    "
+  >
+    Price: 20,00
+  </div>
+  <button
+    style="
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      width: 100%;
+      position: relative;
+      margin-bottom: 10px;
+      background-color: #74716c;
+      font-size:16px;
+      border: #fff;
+      border-radius: 3px;
+    "
+  >
+  <div style="color:#fff ;font-weight:bolder">Book Now</div>
+    
+  </button>
 </div>
 
-    
-{{#schema}} 
-{
-  "name": "t:appBlock.block.name",
-  "target": "section",
-  "stylesheet": ["app-block.css"],
-  "javascript": ["app-block.js"],
-  "templates": [],
-  "settings": [
-    {
-      "type": "text",
-      "id": "title",
-      "label": "t:appBlock.block.settings.title.label",
-      "info":"t:appBlock.block.settings.title.info",
-      "default": "App Block"
-    }
-  ]
-}
+{{#schema}} { "name": "t:appBlock.block.name", "target": "section",
+"stylesheet": ["app-block.css"], "javascript": ["app-block.js"], "templates":
+[], "settings": [ { "type": "text", "id": "title", "label":
+"t:appBlock.block.settings.title.label",
+"info":"t:appBlock.block.settings.title.info", "default": "App Block" } ] }
 {{/schema}}
