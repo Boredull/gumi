@@ -792,7 +792,7 @@ async function initBooking() {
   const timeSelect = document.querySelector(".timeSelect");
   const locationLabel = document.querySelector(".location");
   const resource = document.querySelector(".resource");
-  const price = document.querySelector(".price");
+  const Price = document.querySelector(".Price");
   resource.innerHTML = scheduleData.resources.map(
     (resource) => `<option >${resource.name}</option>`
   );
@@ -802,8 +802,8 @@ async function initBooking() {
   locationLabel.innerHTML += "<option> </option>";
   resource.innerHTML +=
     scheduleData.requireStatus == 1 ? "" : "<option> </option>";
-  price.innerHTML = `Price: ${product.price}`;
-
+  Price.innerHTML = `Price: ${product.price}`;
+console.log(product.price);
   let start = "";
   let end = "";
   function getRightTime() {
