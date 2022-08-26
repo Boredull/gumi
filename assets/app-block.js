@@ -1,3 +1,15 @@
+const logger = {
+  log(...args) {
+    console.log("[BOOKING]: ", ...args);
+  },
+  warn(...args) {
+    console.warn("[BOOKING]: ", ...args);
+  },
+  error(...args) {
+    console.error("[BOOKING]: ", ...args);
+  },
+};
+
 console.log("this is app-block");
 
 // var bookingDays = [];
@@ -690,12 +702,18 @@ const makeUrl = (url, params = {}) => {
   const query = searchParams.toString();
   return url.endsWith("?") ? `${url}${query}` : `${url}?${query}`;
 };
+/**
+ * @param { string } url
+ * @param { RequestInit } _options
+ * @returns
+ */
 const fetcher = (url, _options = {}) => {
   const options = Object.assign({}, _options);
   options.mode = _options.mode || "cors";
   options.method = options.method || "get";
   return _fetch(url, options).then((res) => res.json());
 };
+
 // const gShopline = window.Shopline;
 // const gEventBus = gShopline.event;
 const _productURL = decodeURIComponent(window.location.pathname).split("/");
@@ -749,7 +767,7 @@ async function initBooking() {
       warning(translation.failed_to_find_the_schedule);
       throw err;
     });
-  // console.log('scheduleData: ', JSON.stringify(scheduleData));
+  console.log("scheduleData: ", JSON.stringify(scheduleData));
 
   // const schedules = scheduleData || {};
   //       const days = Object.keys(schedules).filter((date) =>{
@@ -761,6 +779,8 @@ async function initBooking() {
 
   const today = new Date();
   const yesterday = new Date(today);
+  const bookButton = document.querySelector(".bookButton");
+  const selectDate = document.querySelector(".selectDate");
 
   yesterday.setDate(yesterday.getDate() - 1);
   let toDay = today.toISOString().substring(0, 10);
@@ -780,8 +800,7 @@ async function initBooking() {
 
     onSelect: () => {
       let selectDay = calendar.getDaySelected()[0];
-      const bookButton = document.querySelector(".bookButton");
-      const selectDate = document.querySelector(".selectDate");
+
       selectDate.style.display = selectDay >= toDay ? "none" : "flex";
       timeSelect.style.display = selectDay >= toDay ? "block" : "none";
       bookButton.style.display = selectDay >= toDay ? "flex" : "none";
@@ -802,7 +821,7 @@ async function initBooking() {
   resource.innerHTML +=
     scheduleData.requireStatus == 1 ? "" : "<option> </option>";
   // Price.innerHTML = `Price: ${product.price}`;
-// console.log(product.price);
+  // console.log(product.price);
   let start = "";
   let end = "";
   function getRightTime() {
@@ -816,7 +835,7 @@ async function initBooking() {
     // console.log(locations.options[locationIndex].value);
     if (locationValue) {
       const times = getTimes(locationValue, scheduleData.locations);
-      console.log(times);
+      // console.log(times);
       locationStart = times[0].start;
       locationEnd = times[0].end;
       // console.log("locationStart", locationStart);
@@ -884,6 +903,38 @@ async function initBooking() {
     timeSelect.innerHTML = "";
     getRightTime();
   };
+
+  // addEve
+  // bookButton.addEventListener('click')
+  logger.log("button: ", bookButton);
+  // bookButton.addEventListener("click", function () {
+  //   fetch(`${BASE_URL}/api/carts/ajax-cart/add.js`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   }).then(res => res.json()).then(res => {
+  //     logger.log('res: ', res)
+  //   }).catch(err => {
+  //     logger.error('add to cart error: ', err)
+  //   });
+  // });
+  bookButton
+    .addEventListener("click", () => {
+      fetcher(`${BASE_URL}/api/carts/ajax-cart/add.js`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    })
+    .then((res) => {
+      logger.log("res: ", res);
+    })
+    .catch((err) => {
+      logger.error("add to cart error: ", err);
+    });
 }
+// 给button按钮绑定跳转
 
 initBooking();
