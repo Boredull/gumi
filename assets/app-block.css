@@ -51,26 +51,26 @@
 
 
       .hello-week .week {
-        color: #42a298;
+        color: #1a73e8;
         font-size: 1.2em; }
       
       .hello-week .day.is-weekend {
-        color: #ff3860; }
+        color: #2a7de9; }
       
       .hello-week .day.is-highlight {
-        background-color: #8fbc8f;
+        background-color: #9ec4f5;
         color: #fff; }
       
       .hello-week .day.is-today {
-        background-color: #ff3860;
+        background-color: #2a7de9;
         color: #fff; }
       
       .hello-week .day.is-selected {
-        background-color: #7fcbc3 !important;
+        background-color: #4b97fb !important;
         color: #fff !important; }
       
       .hello-week .day.is-begin-range, .hello-week .day.is-end-range {
-        background-color: #42a298 !important;
+        background-color: #2a7de9 !important;
         color: #fff !important; }
       
       .hello-week .day.is-disabled {

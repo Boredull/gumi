@@ -1,8 +1,6 @@
-// const { ctx } = require("../../../..");
-
 console.log("this is app-block");
 
-// 日历
+// var bookingDays = [];
 !(function (t) {
   "use strict";
   const e = "hello-week",
@@ -682,66 +680,211 @@ console.log("this is app-block");
     Object.defineProperty(t, "__esModule", { value: !0 });
 })({});
 
-new HelloWeek({
-  selector: ".calendar",
-  format: "YYYY-MM-DD",
-});
+const BASE_URL = window.origin;
+// @ts-ignore
+// 区分开发环境
+// const IS_DEV = process.env.NODE_ENV !== "production";
+const _fetch = window.fetch;
+const makeUrl = (url, params = {}) => {
+  const searchParams = new URLSearchParams(params);
+  const query = searchParams.toString();
+  return url.endsWith("?") ? `${url}${query}` : `${url}?${query}`;
+};
+const fetcher = (url, _options = {}) => {
+  const options = Object.assign({}, _options);
+  options.mode = _options.mode || "cors";
+  options.method = options.method || "get";
+  return _fetch(url, options).then((res) => res.json());
+};
+// const gShopline = window.Shopline;
+// const gEventBus = gShopline.event;
+const _productURL = decodeURIComponent(window.location.pathname).split("/");
+let gProductHandle = "";
+if (_productURL && _productURL.length) {
+  gProductHandle = _productURL[_productURL.length - 1];
+}
+function getProduct() {
+  return fetcher(
+    `${BASE_URL}/api/product/products.json?handle=${gProductHandle}`
+  ).then((res) => res.products[0]);
+}
 
-// 请求拦截封装
-// const _fetch = window.fetch;
-// const makeUrl = (url, params = {}) => {
-//   const searchParams = new URLSearchParams(params);
-//   const query = searchParams.toString();
-//   return url.endsWith("?") ? `${url}${query}` : `${url}?${query}`;
-// };
+async function initBooking() {
+  const product = await getProduct();
+  // ctx.gProduct = product;
+  console.log("product: ", JSON.stringify(product));
+  if (!product) {
+    // logger.error('Failed to find current product: ');
+    throw new Error("Failed to find current product: ");
+  }
+  if (!Array.isArray(product.tags)) {
+    throw new Error("Current product is not a booking product");
+  }
+  if (!product.tags.includes("booking")) {
+    throw new Error("Current product is not a booking product");
+  }
 
-// const fetcher = (url, _options = {}) => {
-//   const options = { ...options };
-//   options.mode = _options.mode || "cors";
-//   options.method = options.method || "get";
+  const sku = "";
+  window.Shopline.event.on("DataReport::ViewContent", ({ data }) => {
+    const sku = data.content_sku_id;
+    console.log(" sku: ", sku);
+  });
 
-//   return _fetch(url, options).then((res) => res.json());
-// };
-// const scheduleData = await fetcher(
-//   makeUrl("https://api.shopflex.io/reserve/sku/datePlanList", {
-//     platformProductId: ctx.gProduct.id,
-//     platformVariantId: sku,
-//   })
-// )
-//   .then((res) => {
-//     if (res.code == 200) return res.data;
-//     return Promise.reject(
-//       new Error(
-//         `Failed to fetch schedule data, platformProductId = ${ctx.gProduct.id},platformVariantId = ${sku}`
-//       )
-//     );
-//   })
-//   .catch((err) => {
-//     warning(translation.failed_to_find_the_schedule);
-//     throw err;
-//   });
+  // 请求预约日期信息
+  const scheduleData = await fetcher(
+    makeUrl("https://api.shopflex.io/reserve/sku/datePlanList", {
+      platformProductId: product.id,
+      platformVariantId: sku,
+    })
+  )
+    .then((res) => {
+      if (res.code === 200) return res.data;
+      return Promise.reject(
+        new Error(
+          `Failed to fetch schedule data, platformProductId = ${product.id}, platformVariantId = ${sku}`
+        )
+      );
+    })
+    .catch((err) => {
+      warning(translation.failed_to_find_the_schedule);
+      throw err;
+    });
+  // console.log('scheduleData: ', JSON.stringify(scheduleData));
 
-//   function getProduct() {
-//     return fetcher(`${BASE_URL}/api/product/products.json?handle=${gProductHandle}`).then(
-//       (res) => res.products[0]
-//     );
-//   }
+  // const schedules = scheduleData || {};
+  //       const days = Object.keys(schedules).filter((date) =>{
+  //         return /\d{2}-\d{2}-\d{2}/.test(date);
+  //        });
+  //        console.log('day',days);
+  //  bookingDays = day.concat();
+  //  console.log('bookingDays',bookingDays);
 
-//   async function initBooking() {
-//     const product = await getProduct();
-//   ctx.gProduct = product;
-//   logger.log('product: ', product);
+  const today = new Date();
+  const yesterday = new Date(today);
 
-//   if (!product) {
-//     // logger.error('Failed to find current product: ');
-//     throw new Error('Failed to find current product: ');
-//   }
-//   if (!Array.isArray(product.tags)) {
-//     throw new Error('Current product is not a booking product');
-//   }
-//   if (!product.tags.includes('booking')) {
-//     throw new Error('Current product is not a booking product');
-//   }
-//   }
+  yesterday.setDate(yesterday.getDate() - 1);
+  let toDay = today.toISOString().substring(0, 10);
+  const calendar = new HelloWeek({
+    selector: ".calendar",
+    format: "YYYY-MM-DD",
+    //   daysHighlight:[
+    //     {
+    //     days: days,
+    //     // backgroundColor:'#6495ed',
+    //     color:'#fff',
+    //     title: 'bookingDay',
+    //   }
+    // ]
 
-  
+    disableDates: [["2020-03-02", yesterday]],
+
+    onSelect: () => {
+      let selectDay = calendar.getDaySelected()[0];
+
+      const bookButton = document.querySelector(".bookButton");
+      const selectDate = document.querySelector(".selectDate");
+      selectDate.style.display = selectDay >= toDay ? "none" : "flex";
+      timeSelect.style.display = selectDay >= toDay ? "block" : "none";
+      bookButton.style.display = selectDay >= toDay ? "flex" : "none";
+    },
+  });
+
+  const timeSelect = document.querySelector(".timeSelect");
+  const locationLabel = document.querySelector(".location");
+  const resource = document.querySelector(".resource");
+  const price = document.querySelector(".price");
+  resource.innerHTML = scheduleData.resources.map(
+    (resource) => `<option >${resource.name}</option>`
+  );
+  locationLabel.innerHTML = scheduleData.locations.map(
+    (location) => `<option >${location.name}</option>`
+  );
+  locationLabel.innerHTML += "<option> </option>";
+  resource.innerHTML +=
+    scheduleData.requireStatus == 1 ? "" : "<option> </option>";
+  price.innerHTML = `Price: ${product.price}`;
+
+  let start = "";
+  let end = "";
+  function getRightTime() {
+    let locationStart = "";
+    let locationEnd = "";
+    let resourceStart = "";
+    let resourceEnd = "";
+
+    const locationIndex = locationLabel.selectedIndex;
+    const locationValue = locationLabel.options[locationIndex].value;
+    // console.log(locations.options[locationIndex].value);
+    if (locationValue) {
+      const times = getTimes(locationValue, scheduleData.locations);
+      console.log(times);
+      locationStart = times[0].start;
+      locationEnd = times[0].end;
+      // console.log("locationStart", locationStart);
+      // console.log("locationEnd", locationEnd);
+    } else {
+      locationStart = "00:00";
+      locationEnd = "24:00";
+    }
+
+    // 封装通过下拉框选中的地址找到对应的时间段
+    function getTimes(name, arr) {
+      return arr.find((item) => item.name == name).businessHours;
+    }
+
+    const resourceIndex = resource.selectedIndex;
+    const resourceValue = resource.options[resourceIndex].value;
+    // console.log(resource.options[resourceIndex].value);
+    if (resourceValue) {
+      const times = getTimes(resourceValue, scheduleData.resources);
+      resourceStart = times[0].start;
+      resourceEnd = times[0].end;
+      // console.log("resourceStart", resourceStart);
+      // console.log("resourceEnd", resourceEnd);
+    } else {
+      resourceStart = "00:00";
+      resourceEnd = "24:00";
+    }
+
+    start = locationStart > resourceStart ? locationStart : resourceStart;
+    end = locationEnd < resourceEnd ? locationEnd : resourceEnd;
+    console.log(start);
+    console.log(end);
+
+    if (start < end) {
+      timeSelect.innerHTML += `<option selected disabled hidden>${start} - ${end} </option>`;
+      let timeDifference = end.substring(0, 2) - start.substring(0, 2);
+      for (let i = 0; i < timeDifference; i++) {
+        let updateStart = parseInt(start.substring(0, 2)) + 1 + ":" + "00";
+        timeSelect.innerHTML += `<option >${start} - ${updateStart} </option>`;
+        start = updateStart;
+      }
+    } else {
+      timeSelect.innerHTML = `<option selected disabled hidden>none</option>`;
+    }
+    // console.log((end)/1000);
+    // console.log(start.substring(0,2));
+    // console.log(end.substring(0,2)-start.substring(0,2));
+    // console.log(start.split(":").join(""));
+    // if(start.substring(0,2)<end.substring(0,2)){
+    // let i = 1;
+    //  let updateStart = [...(start.split(":").join(""))].splice(2,0,":").join("");
+    // let updateStart = [...(start.split(":").join(""))];
+    //  console.log(updateStart);
+
+    //  console.log(updateStart.splice(2,0,":").join(""));
+    // timeSelect.innerHTML += `<option >${start} - ${updateStart} </option>`
+  }
+
+  getRightTime();
+  locationLabel.onchange = function () {
+    timeSelect.innerHTML = "";
+    getRightTime();
+  };
+  resource.onchange = function () {
+    timeSelect.innerHTML = "";
+    getRightTime();
+  };
+}
+
+initBooking();

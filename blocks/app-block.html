@@ -4,17 +4,17 @@
   </div>
   <div class="information" style="gap: 16px; margin-bottom: 16px">
     <!-- Select location -->
-    <div style=" font-size: 16px">
+    <div style="font-size: 16px">
       <!-- <span style="color: red">*</span> -->
       <div style="margin: 10px 0">Select location</div>
       <select
         class="location"
-        style="height: 36px; width: 100%; border-radius: 5px;padding-left:5px;"
+        style="height: 36px; width: 100%; border-radius: 5px; padding-left: 5px"
       >
-        <option value="Choose any" >
-         <div style="margin:5px">测试地点2</div> 
-      </option>
-        <option >测试1</option>
+        <!-- <option value="Choose any">
+          <div style="margin: 5px">测试地点2</div>
+        </option> -->
+        <!-- <option>测试1</option> -->
       </select>
     </div>
     <div style="vertical-align: middle; font-size: 16px">
@@ -22,32 +22,39 @@
       <div style="margin: 10px 0">Select resource</div>
       <select
         class="resource"
-        style="min-height: 36px; width: 100%; border-radius: 5px;
-        padding-left:5px"
+        style="
+          min-height: 36px;
+          width: 100%;
+          border-radius: 5px;
+          padding-left: 5px;
+        "
       >
-        <option value="none" selected disabled hidden>Choose any</option>
-        <option value="1" >测试容量1</option>
-        <option >测试容量2</option>
+        <!-- <option value="none" selected disabled hidden>Choose any</option>
+       <option value="1">测试容量1</option>
+        <option>测试容量2</option> -->
       </select>
     </div>
   </div>
   <div class="calendar"></div>
   <div>
+    <!-- <div class="rightTime"></div> -->
     <select
+      class="timeSelect"
       style="
+        display: none;
         text-align: center;
         min-height: 36px;
         width: 100%;
         border-radius: 5px;
       "
     >
-      <option value="1" >9:00 am - 10:00 am</option>
-      <option value="2" >10:00 am - 11:00 am</option>
-      <option value="3" >12:00 am - 1:00 pm</option>
-      <option value="4" >1:00 am - 2:00 am</option>
-      <option value="5" >2:00 am - 3:00 am</option>
-      <option value="6" >3:00 am - 4:00 am</option>
-      <option value="7" >4:00 am - 5:00 am</option>
+      <!-- <option value="1">9:00  -  10:00 </option>
+      <option value="2">10:00  -  11:00 </option>
+      <option value="3">12:00  -  13:00 </option>
+      <option value="4">13:00  -  14:00 </option>
+      <option value="5">14:00  -  15:00 </option>
+      <option value="6">15:00  -  16:00 </option>
+      <option value="7">16:00  -  17:00 </option> -->
     </select>
   </div>
   <div
@@ -59,27 +66,53 @@
       font-weight: bold;
       margin: 10px 0;
     "
-  >
-    Price: 20,00
-  </div>
-  <button
-    class="bookButton"
+  ></div>
+
+  <div
+    class="selectDate"
     style="
       display: flex;
+      /* display:none; */
       align-items: center;
       justify-content: center;
       min-height: 44px;
       width: 100%;
       position: relative;
       margin-bottom: 10px;
-      background-color: #C4CDD5;
-      font-size:16px;
+      background-color: #c4cdd5;
+      font-size: 16px;
       border: #fff;
       border-radius: 3px;
-      cursor:pointer;
     "
   >
-  <div style="color:#3E4E57  ;font-weight:bolder;position: absolute;">Seclect Date</div>
+    <span style="color: #3e4e57; font-weight: bolder; position: absolute">
+      Select Date
+    </span>
+  </div>
+
+  <button
+    class="bookButton"
+    style="
+      display: none;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      width: 100%;
+      position: relative;
+      margin-bottom: 10px;
+      background-color: #c4cdd5;
+      font-size: 16px;
+      border: #fff;
+      border-radius: 3px;
+      cursor: pointer;
+    "
+  >
+    <div
+      class="buttonText"
+      style="color: #3e4e57; font-weight: bolder; position: absolute"
+    >
+      Booking Now
+    </div>
   </button>
 </div>
 
