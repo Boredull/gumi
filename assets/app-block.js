@@ -780,7 +780,6 @@ async function initBooking() {
 
     onSelect: () => {
       let selectDay = calendar.getDaySelected()[0];
-
       const bookButton = document.querySelector(".bookButton");
       const selectDate = document.querySelector(".selectDate");
       selectDate.style.display = selectDay >= toDay ? "none" : "flex";
@@ -792,7 +791,7 @@ async function initBooking() {
   const timeSelect = document.querySelector(".timeSelect");
   const locationLabel = document.querySelector(".location");
   const resource = document.querySelector(".resource");
-  const Price = document.querySelector(".Price");
+  // const Price = document.querySelector(".Price");
   resource.innerHTML = scheduleData.resources.map(
     (resource) => `<option >${resource.name}</option>`
   );
@@ -802,8 +801,8 @@ async function initBooking() {
   locationLabel.innerHTML += "<option> </option>";
   resource.innerHTML +=
     scheduleData.requireStatus == 1 ? "" : "<option> </option>";
-  Price.innerHTML = `Price: ${product.price}`;
-console.log(product.price);
+  // Price.innerHTML = `Price: ${product.price}`;
+// console.log(product.price);
   let start = "";
   let end = "";
   function getRightTime() {
