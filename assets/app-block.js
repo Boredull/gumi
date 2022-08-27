@@ -68,8 +68,7 @@ console.log("this is app-block");
     return v(e) ? e.querySelector(`.${t}`) : document.querySelector(`.${t}`);
   }
   function H(t, e, s) {
-    for (const a of Object.keys(t.attributes[s]))
-      O(e, `data-${a}`, t.attributes[s][a]);
+    for (const a of Object.keys(t.attributes[s])) O(e, `data-${a}`, t.attributes[s][a]);
   }
   function T(t, e, s) {
     Y(t.attributes[s])
@@ -81,15 +80,11 @@ console.log("this is app-block");
   }
   function x(t, e, s) {
     if (Y(t.attributes[s])) e.style = t.attributes[s];
-    else if (M(t.attributes[s]))
-      for (const a of Object.keys(t.attributes[s]))
-        e.style[a] = t.attributes[s][a];
+    else if (M(t.attributes[s])) for (const a of Object.keys(t.attributes[s])) e.style[a] = t.attributes[s][a];
   }
   function C(t, e, ...s) {
     const a = { nodeName: t };
-    return (
-      e && (a.attributes = e), s.length && (a.children = [].concat(...s)), a
-    );
+    return e && (a.attributes = e), s.length && (a.children = [].concat(...s)), a;
   }
   function F(t, e) {
     if (t.split) return document.createTextNode(t);
@@ -190,16 +185,12 @@ console.log("this is app-block");
     };
   function U(t, e) {
     const s = v(t) ? new Date(t) : new Date();
-    return (
-      (e = e || s.getTimezoneOffset()), s.setTime(s.getTime() + 60 * e * 1e3), s
-    );
+    return (e = e || s.getTimezoneOffset()), s.setTime(s.getTime() + 60 * e * 1e3), s;
   }
   function I(t, e) {
     const s = U(t, e);
     return (
-      (a = s.getDate()),
-      (n = s.getMonth()),
-      `${s.getFullYear()}-${("0" + (n + 1)).slice(-2)}-${("0" + a).slice(-2)}`
+      (a = s.getDate()), (n = s.getMonth()), `${s.getFullYear()}-${("0" + (n + 1)).slice(-2)}-${("0" + a).slice(-2)}`
     );
     var a, n;
   }
@@ -207,34 +198,24 @@ console.log("this is app-block");
     const { format: a } = E.get(),
       { months: n, monthsShort: i } = W.get(),
       r = U(t, s);
-    return (e = (e = (e = (e = (e = (e = (e = (e = (e = (e = (e =
-      e || a).replace("dd", r.getDate().toString())).replace(
-      "DD",
-      (r.getDate() > 9 ? r.getDate() : "0" + r.getDate()).toString()
-    )).replace("mm", (r.getMonth() + 1).toString())).replace(
-      "MMM",
-      n[r.getMonth()]
-    )).replace(
+    return (e = (e = (e = (e = (e = (e = (e = (e = (e = (e = (e = e || a).replace(
+      "dd",
+      r.getDate().toString()
+    )).replace("DD", (r.getDate() > 9 ? r.getDate() : "0" + r.getDate()).toString())).replace(
+      "mm",
+      (r.getMonth() + 1).toString()
+    )).replace("MMM", n[r.getMonth()])).replace(
       "MM",
-      (r.getMonth() + 1 > 9
-        ? r.getMonth() + 1
-        : "0" + (r.getMonth() + 1)
-      ).toString()
-    )).replace("mmm", i[r.getMonth()])).replace(
-      "yyyy",
+      (r.getMonth() + 1 > 9 ? r.getMonth() + 1 : "0" + (r.getMonth() + 1)).toString()
+    )).replace("mmm", i[r.getMonth()])).replace("yyyy", r.getFullYear().toString())).replace(
+      "YYYY",
       r.getFullYear().toString()
-    )).replace("YYYY", r.getFullYear().toString())).replace(
-      "YY",
-      r.getFullYear().toString().substring(2)
-    )).replace("yy", r.getFullYear().toString().substring(2)));
+    )).replace("YY", r.getFullYear().toString().substring(2))).replace("yy", r.getFullYear().toString().substring(2)));
   }
   function P(t) {
     const e = new Date(t);
     return Number(
-      "" +
-        e.getFullYear() +
-        (e.getMonth() + 1) +
-        (e.getDate() > 9 ? e.getDate() : "0" + e.getDate()).toString()
+      "" + e.getFullYear() + (e.getMonth() + 1) + (e.getDate() > 9 ? e.getDate() : "0" + e.getDate()).toString()
     );
   }
   function $(t, e) {
@@ -285,41 +266,24 @@ console.log("this is app-block");
         if (!v(t.selector)) throw new Error("You need to specify a selector!");
         return (
           Y(t.selector)
-            ? (d.selector = t.selector
-                ? document.querySelector(t.selector)
-                : t.selector)
+            ? (d.selector = t.selector ? document.querySelector(t.selector) : t.selector)
             : (d.selector = t.selector),
-          v(d.selector)
-            ? t.selector !== e && R(d.selector, e)
-            : (d.selector = F(C("div", { class: [t.selector, e] }))),
+          v(d.selector) ? t.selector !== e && R(d.selector, e) : (d.selector = F(C("div", { class: [t.selector, e] }))),
           (d.calendar = {}),
           (d.calendar.navigation = A(n, d.selector)),
-          v(d.calendar.navigation) ||
-            (d.calendar.navigation = F(C("div", { class: n }), d.selector)),
+          v(d.calendar.navigation) || (d.calendar.navigation = F(C("div", { class: n }), d.selector)),
           v(t.nav[0]) &&
-            ((d.calendar.prevMonth = F(
-              C("div", { class: o }, t.nav[0]),
-              d.calendar.navigation
-            )),
+            ((d.calendar.prevMonth = F(C("div", { class: o }, t.nav[0]), d.calendar.navigation)),
             d.calendar.prevMonth.addEventListener("click", () => s.prev.cb())),
           (d.calendar.period = A(r, d.selector)),
-          v(d.calendar.period) ||
-            (d.calendar.period = F(
-              C("div", { class: r }),
-              d.calendar.navigation
-            )),
+          v(d.calendar.period) || (d.calendar.period = F(C("div", { class: r }), d.calendar.navigation)),
           v(t.nav[1]) &&
-            ((d.calendar.nextMonth = F(
-              C("div", { class: i }, t.nav[1]),
-              d.calendar.navigation
-            )),
+            ((d.calendar.nextMonth = F(C("div", { class: i }, t.nav[1]), d.calendar.navigation)),
             d.calendar.nextMonth.addEventListener("click", () => s.next.cb())),
           (d.calendar.week = A(h, d.selector)),
-          v(d.calendar.week) ||
-            (d.calendar.week = F(C("div", { class: h }), d.selector)),
+          v(d.calendar.week) || (d.calendar.week = F(C("div", { class: h }), d.selector)),
           (d.calendar.month = A(a, d.selector)),
-          v(d.calendar.month) ||
-            (d.calendar.month = F(C("div", { class: a }), d.selector)),
+          v(d.calendar.month) || (d.calendar.month = F(C("div", { class: a }), d.selector)),
           t.rtl && (R(d.calendar.week, l), R(d.calendar.month, l)),
           d
         );
@@ -375,9 +339,7 @@ console.log("this is app-block");
       return this.date.getFullYear();
     }
     setOptions(t, e) {
-      M(t) && this.options.set(t),
-        "function" == typeof e && this.options.set(e(this.options.get())),
-        this.update();
+      M(t) && this.options.set(t), "function" == typeof e && this.options.set(e(this.options.get())), this.update();
     }
     setDaysHighlight(t) {
       (this.daysHighlight = [...this.daysHighlight, ...t]), this.update();
@@ -416,20 +378,7 @@ console.log("this is app-block");
               "November",
               "December",
             ],
-            monthsShort: [
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "May",
-              "Jun",
-              "Jul",
-              "Aug",
-              "Sep",
-              "Oct",
-              "Nov",
-              "Dec",
-            ],
+            monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
           },
         })
           .then((t) => t)
@@ -453,9 +402,7 @@ console.log("this is app-block");
         (this.daysSelected = e || []),
         r(),
         s &&
-          ((this.date = U(s, a)),
-          (this.defaultDate = U(s, a)),
-          this.defaultDate.setDate(this.defaultDate.getDate())),
+          ((this.date = U(s, a)), (this.defaultDate = U(s, a)), this.defaultDate.setDate(this.defaultDate.getDate())),
         this.date.setDate(1),
         n && this.setMinDate(n),
         i && this.setMaxDate(i),
@@ -466,8 +413,7 @@ console.log("this is app-block");
       const { range: e } = this.options.get();
       this.daysOfMonth = this.selector.querySelectorAll("." + a + " ." + s);
       for (const s of Object.keys(this.daysOfMonth))
-        this.handleClickInteraction(this.daysOfMonth[s], t),
-          e && this.handleMouseInteraction(this.daysOfMonth[s]);
+        this.handleClickInteraction(this.daysOfMonth[s], t), e && this.handleMouseInteraction(this.daysOfMonth[s]);
     }
     handleClickInteraction(t, e) {
       const { range: s, multiplePick: a, onSelect: n } = this.options.get();
@@ -479,11 +425,8 @@ console.log("this is app-block");
           s ||
             (a
               ? (this.days[i].date &&
-                  (this.daysSelected = this.daysSelected.filter(
-                    (t) => P(t) !== P(this.lastSelectedDay)
-                  )),
-                this.days[i].isSelected ||
-                  this.daysSelected.push(this.lastSelectedDay))
+                  (this.daysSelected = this.daysSelected.filter((t) => P(t) !== P(this.lastSelectedDay))),
+                this.days[i].isSelected || this.daysSelected.push(this.lastSelectedDay))
               : (this.days[i].locked || this.removeStatesClass(),
                 (this.daysSelected = []),
                 this.daysSelected.push(this.lastSelectedDay))),
@@ -511,8 +454,7 @@ console.log("this is app-block");
               R(t.target, g),
               this.intervalRange.begin > this.intervalRange.end &&
                 ((this.intervalRange = {}), this.removeStatesClass())),
-            this.intervalRange.begin ||
-              (this.intervalRange.begin = this.days[i].date),
+            this.intervalRange.begin || (this.intervalRange.begin = this.days[i].date),
             R(t.target, y)),
           n(this.days[i]),
           e && e(this.days[i]));
@@ -521,12 +463,7 @@ console.log("this is app-block");
     handleMouseInteraction(t) {
       t.addEventListener("mouseover", (t) => {
         const e = L(this.daysOfMonth, t.target);
-        if (
-          !(
-            !this.intervalRange.begin ||
-            (this.intervalRange.begin && this.intervalRange.end)
-          )
-        ) {
+        if (!(!this.intervalRange.begin || (this.intervalRange.begin && this.intervalRange.end))) {
           this.removeStatesClass();
           for (let t = 1; t <= Object.keys(this.days).length; t++)
             (this.days[t].isSelected = !1),
@@ -535,8 +472,7 @@ console.log("this is app-block");
                 B(this.days[t].date, this.days[e].date) &&
                 (R(this.days[t].element, y),
                 R(this.days[t].element, f),
-                z(this.days[t].date, this.intervalRange.begin) &&
-                  R(this.days[t].element, d));
+                z(this.days[t].date, this.intervalRange.begin) && R(this.days[t].element, d));
         }
       });
     }
@@ -545,8 +481,7 @@ console.log("this is app-block");
     }
     createMonth() {
       const t = this.date.getMonth();
-      for (; this.date.getMonth() === t; )
-        this.createDay(this.date), this.date.setDate(this.date.getDate() + 1);
+      for (; this.date.getMonth() === t; ) this.createDay(this.date), this.date.setDate(this.date.getDate() + 1);
       this.date.setMonth(this.date.getMonth() - 1), this.selectDay();
     }
     createDay(t) {
@@ -578,8 +513,7 @@ console.log("this is app-block");
         beforeCreateDay: v,
       } = this.options.get();
       (this.days = this.days || {}),
-        (a !== D.SUNDAY && a !== D.SATURDAY) ||
-          (n.attributes.class.push(b), (n.isWeekend = !0)),
+        (a !== D.SUNDAY && a !== D.SATURDAY) || (n.attributes.class.push(b), (n.isWeekend = !0)),
         (i ||
           (r && r.includes(a)) ||
           (o && B(this.date, this.defaultDate)) ||
@@ -587,15 +521,13 @@ console.log("this is app-block");
           (h && B(h, n.date))) &&
           (n.attributes.class.push(c), (n.locked = !0)),
         u && this.disabledDays(n),
-        z(this.todayDate, n.date) &&
-          ((n.isToday = !0), S && n.attributes.class.push(p)),
+        z(this.todayDate, n.date) && ((n.isToday = !0), S && n.attributes.class.push(p)),
         this.daysSelected.find((t) => {
           z(t, n.date) && (n.attributes.class.push(y), (n.isSelected = !0));
         }),
         (function (t, e, s) {
           return $(s, t) && q(s, e);
-        })(this.intervalRange.begin, this.intervalRange.end, n.date) &&
-          (n.attributes.class.push(f), (n.isRange = !0)),
+        })(this.intervalRange.begin, this.intervalRange.end, n.date) && (n.attributes.class.push(f), (n.isRange = !0)),
         z(n.date, this.intervalRange.begin) && n.attributes.class.push(d),
         z(n.date, this.intervalRange.end) && n.attributes.class.push(g),
         this.daysHighlight && this.highlightDays(n),
@@ -604,8 +536,7 @@ console.log("this is app-block");
             m === D.SUNDAY
               ? a * (100 / Object.keys(D).length) + "%"
               : a === D.SUNDAY
-              ? (Object.keys(D).length - m) * (100 / Object.keys(D).length) +
-                "%"
+              ? (Object.keys(D).length - m) * (100 / Object.keys(D).length) + "%"
               : (a - 1) * (100 / Object.keys(D).length) + "%"),
         (n.node = C("div", n.attributes, n.day.toString())),
         (n = v(n)),
@@ -616,9 +547,7 @@ console.log("this is app-block");
       const { disableDates: e } = this.options.get();
       k(e[0])
         ? e.map((e) => {
-            _(t.date, e[0]) &&
-              B(t.date, e[1]) &&
-              (t.attributes.class.push(c), (t.locked = !0));
+            _(t.date, e[0]) && B(t.date, e[1]) && (t.attributes.class.push(c), (t.locked = !0));
           })
         : e.map((e) => {
             z(t.date, e) && (t.attributes.class.push(c), (t.locked = !0));
@@ -628,9 +557,7 @@ console.log("this is app-block");
       for (const e in this.daysHighlight)
         this.daysHighlight[e].days[0] instanceof Array
           ? this.daysHighlight[e].days.map((s) => {
-              _(t.date, s[0]) &&
-                B(t.date, s[1]) &&
-                this.computedAttributes(e, t);
+              _(t.date, s[0]) && B(t.date, s[1]) && this.computedAttributes(e, t);
             })
           : this.daysHighlight[e].days.map((s) => {
               z(t.date, s) && this.computedAttributes(e, t);
@@ -640,9 +567,7 @@ console.log("this is app-block");
       const { attributes: s, ...a } = this.daysHighlight[t];
       delete a.days, (e = N(e, a));
       for (const t in s)
-        e.attributes[t] && s[t]
-          ? (e.attributes[t] = N(e.attributes[t], s[t]))
-          : s[t] && (e.attributes[t] = s[t]);
+        e.attributes[t] && s[t] ? (e.attributes[t] = N(e.attributes[t], s[t])) : s[t] && (e.attributes[t] = s[t]);
       e.attributes.class.push(u), (e.isHighlight = !0);
     }
     monthsAsString(t) {
@@ -657,10 +582,7 @@ console.log("this is app-block");
     }
     mounted() {
       this.calendar.period &&
-        (this.calendar.period.innerHTML =
-          this.monthsAsString(this.date.getMonth()) +
-          " " +
-          this.date.getFullYear());
+        (this.calendar.period.innerHTML = this.monthsAsString(this.date.getMonth()) + " " + this.date.getFullYear());
       const t = [],
         { weekStart: e } = this.options.get(),
         { daysShort: s } = this.langs.get();
@@ -722,9 +644,7 @@ if (_productURL && _productURL.length) {
   gProductHandle = _productURL[_productURL.length - 1];
 }
 function getProduct() {
-  return fetcher(
-    `${BASE_URL}/api/product/products.json?handle=${gProductHandle}`
-  ).then((res) => res.products[0]);
+  return fetcher(`${BASE_URL}/api/product/products.json?handle=${gProductHandle}`).then((res) => res.products[0]);
 }
 
 async function initBooking() {
@@ -758,9 +678,7 @@ async function initBooking() {
     .then((res) => {
       if (res.code === 200) return res.data;
       return Promise.reject(
-        new Error(
-          `Failed to fetch schedule data, platformProductId = ${product.id}, platformVariantId = ${sku}`
-        )
+        new Error(`Failed to fetch schedule data, platformProductId = ${product.id}, platformVariantId = ${sku}`)
       );
     })
     .catch((err) => {
@@ -811,15 +729,10 @@ async function initBooking() {
   const locationLabel = document.querySelector(".location");
   const resource = document.querySelector(".resource");
   // const Price = document.querySelector(".Price");
-  resource.innerHTML = scheduleData.resources.map(
-    (resource) => `<option >${resource.name}</option>`
-  );
-  locationLabel.innerHTML = scheduleData.locations.map(
-    (location) => `<option >${location.name}</option>`
-  );
+  resource.innerHTML = scheduleData.resources.map((resource) => `<option >${resource.name}</option>`);
+  locationLabel.innerHTML = scheduleData.locations.map((location) => `<option >${location.name}</option>`);
   locationLabel.innerHTML += "<option> </option>";
-  resource.innerHTML +=
-    scheduleData.requireStatus == 1 ? "" : "<option> </option>";
+  resource.innerHTML += scheduleData.requireStatus == 1 ? "" : "<option> </option>";
   // Price.innerHTML = `Price: ${product.price}`;
   // console.log(product.price);
   let start = "";
@@ -919,21 +832,20 @@ async function initBooking() {
   //     logger.error('add to cart error: ', err)
   //   });
   // });
-  bookButton
-    .addEventListener("click", () => {
-      fetcher(`${BASE_URL}/api/carts/ajax-cart/add.js`, {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
+  bookButton.addEventListener("click", () => {
+    fetcher(`${BASE_URL}/api/carts/ajax-cart/add.js`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        logger.log("res: ", res);
+      })
+      .catch((err) => {
+        logger.error("add to cart error: ", err);
       });
-    })
-    .then((res) => {
-      logger.log("res: ", res);
-    })
-    .catch((err) => {
-      logger.error("add to cart error: ", err);
-    });
+  });
 }
 // 给button按钮绑定跳转
 
