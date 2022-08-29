@@ -702,9 +702,10 @@ async function initBooking() {
   const yesterday = new Date(today);
   const bookButton = document.querySelector(".bookButton");
   const selectDate = document.querySelector(".selectDate");
-
+  
   yesterday.setDate(yesterday.getDate() - 1);
   let toDay = today.toISOString().substring(0, 10);
+  let selectDay;
   const calendar = new HelloWeek({
     selector: ".calendar",
     format: "YYYY-MM-DD",
@@ -720,8 +721,8 @@ async function initBooking() {
     disableDates: [["2020-03-02", yesterday]],
 
     onSelect: () => {
-      let selectDay = calendar.getDaySelected()[0];
-
+      selectDay = calendar.getDaySelected()[0];
+      console.log(selectDay);
       selectDate.style.display = selectDay >= toDay ? "none" : "flex";
       timeSelect.style.display = selectDay >= toDay ? "block" : "none";
       bookButton.style.display = selectDay >= toDay ? "flex" : "none";
@@ -873,15 +874,17 @@ async function initBooking() {
               {
                 name: 'Booking',
                 // format('YYYY-MM-DD'),
+                 value:`${selectDay}`,
                 type: 'text',
               },
               // ...extra,
-              {
-                type: 'text',
-                show: true,
-                export: true,
-                extInfo: '',
-              }
+              // {
+              //   name:'Date',
+              //   type: 'text',
+              //   show: true,
+              //   export: true,
+              //   extInfo: '',
+              // },
             ],
           }
         ]
