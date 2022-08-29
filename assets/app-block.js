@@ -648,6 +648,7 @@ function getProduct() {
 }
 
 async function initBooking() {
+  
   const product = await getProduct();
   // ctx.gProduct = product;
   console.log("product: ", JSON.stringify(product));
@@ -663,8 +664,10 @@ async function initBooking() {
   }
 
   let sku ;
+  let amount;
   window.Shopline.event.on("DataReport::ViewContent", ({ data }) => {
     sku = data.content_sku_id;
+    
     console.log(" sku: ", sku);
   });
 
@@ -682,7 +685,7 @@ async function initBooking() {
       );
     })
     .catch((err) => {
-      warning(translation.failed_to_find_the_schedule);
+      // warning(translation.failed_to_find_the_schedule);
       throw err;
     });
   // console.log("scheduleData: ", JSON.stringify(scheduleData));
@@ -832,8 +835,31 @@ async function initBooking() {
   //     logger.error('add to cart error: ', err)
   //   });
   // });
-  bookButton.addEventListener("click", () => {
-    fetcher(`${BASE_URL}/api/carts/ajax-cart/add.js`, {
+  window.Shopline.event.on('DataReport::ViewContent',({data})=>{
+    amount = data.quantity;
+    logger.log("quantity",amount);
+    })
+  bookButton.addEventListener("click", async() => {
+    // const extra = [];
+    //         if (scheduleData.locations) {
+    //             extra.push({
+    //                 name: 'Location',
+    //                 value: locationValue,
+    //                 type: 'text',
+    //                 show: true,
+    //                 export: true,
+    //             });
+    //         }
+    //         if (scheduleData.resources) {
+    //             extra.push({
+    //                 name: 'Resource',
+    //                 value: currentResource.name,
+    //                 type: 'text',
+    //                 show: true,
+    //                 export: true,
+    //             });
+    //         }
+   await fetcher(`${BASE_URL}/api/carts/ajax-cart/add.js`, {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -842,8 +868,21 @@ async function initBooking() {
         items:[
           {
             id : sku,
-            quantity:1,
-            properties:null,
+            quantity:amount,
+            properties:[
+              {
+                name: 'Booking',
+                // format('YYYY-MM-DD'),
+                type: 'text',
+              },
+              // ...extra,
+              {
+                type: 'text',
+                show: true,
+                export: true,
+                extInfo: '',
+              }
+            ],
           }
         ]
       })
@@ -852,7 +891,8 @@ async function initBooking() {
         logger.log("res: ", res);
         // location.reload(); 重新加载显示增添
         // 跳转
-        location.href =`${BASE_URL}/cart`
+        Shopline.event.emit('Cart::NavigateCart');
+        // location.href =`${BASE_URL}/cart`
       }
       )
       .catch((err) => {
