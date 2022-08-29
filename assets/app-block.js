@@ -10,7 +10,7 @@ const logger = {
   },
 };
 
-console.log("this is app-block");
+// console.log("this is app-block");
 
 // var bookingDays = [];
 !(function (t) {
@@ -662,9 +662,9 @@ async function initBooking() {
     throw new Error("Current product is not a booking product");
   }
 
-  const sku = "";
+  let sku ;
   window.Shopline.event.on("DataReport::ViewContent", ({ data }) => {
-    const sku = data.content_sku_id;
+    sku = data.content_sku_id;
     console.log(" sku: ", sku);
   });
 
@@ -685,7 +685,7 @@ async function initBooking() {
       warning(translation.failed_to_find_the_schedule);
       throw err;
     });
-  console.log("scheduleData: ", JSON.stringify(scheduleData));
+  // console.log("scheduleData: ", JSON.stringify(scheduleData));
 
   // const schedules = scheduleData || {};
   //       const days = Object.keys(schedules).filter((date) =>{
@@ -819,7 +819,7 @@ async function initBooking() {
 
   // addEve
   // bookButton.addEventListener('click')
-  logger.log("button: ", bookButton);
+  // logger.log("button: ", bookButton);
   // bookButton.addEventListener("click", function () {
   //   fetch(`${BASE_URL}/api/carts/ajax-cart/add.js`, {
   //     method: "POST",
@@ -838,14 +838,29 @@ async function initBooking() {
       headers: {
         "Content-Type": "application/json",
       },
+      body:JSON.stringify({
+        items:[
+          {
+            id : sku,
+            quantity:1,
+            properties:null,
+          }
+        ]
+      })
     })
       .then((res) => {
         logger.log("res: ", res);
-      })
+        // location.reload(); 重新加载显示增添
+        // 跳转
+        location.href =`${BASE_URL}/cart`
+      }
+      )
       .catch((err) => {
         logger.error("add to cart error: ", err);
       });
-  });
+  }
+  );
+  // window.Shoopline.event.emit('Cart::NavigateCart');
 }
 // 给button按钮绑定跳转
 
