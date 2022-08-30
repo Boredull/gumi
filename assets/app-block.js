@@ -837,12 +837,15 @@ async function initBooking() {
     console.log(amount);
     if (resourceValue && amount > capacity) {
       alert(`The sales increase more than the remaining capacity ${capacity}`)
-      stepper_after.style.pointerEvents = "none";
+      // stepper_after.style.pointerEvents = "none";
       // timeSelect.innerHTML = "";
       timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
       // return amount = 1;
     } else {
-      stepper_before.style.pointerEvents = "auto";
+      // stepper_after.style.pointerEvents = "auto";
+      // stepper_before.style.pointerEvents = "auto";
+      timeSelect.innerHTML = "";
+      getRightTime();
     }
   });
   stepper_before.addEventListener("click", () => { 
