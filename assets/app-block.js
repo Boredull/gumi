@@ -836,20 +836,26 @@ async function initBooking() {
     console.log(amount);
     if (resourceValue && amount > capacity) {
       alert(`The sales increase more than the remaining capacity ${capacity}`)
-      stepper_after.style.pointerEvents = none;
+      stepper_after.style.pointerEvents = "none";
       // timeSelect.innerHTML = "";
-      // timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
-    } 
+      timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
+      // return amount = 1;
+    } else {
+      stepper_before.style.pointerEvents = "auto";
+    }
   });
   stepper_before.addEventListener("click", () => { 
     amount = document.querySelector(".stepper-input").value;
     console.log(amount);
     if (resourceValue && amount > capacity) {
+      timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
       alert(`The sales increase more than the remaining capacity ${capacity}`)
-      stepper_before.style.cursor = not-allowed;
+    }
+      // stepper_before.style.pointerEvents = "none";
+      // return amount = 1;
       // timeSelect.innerHTML = "";
       // timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
-    } 
+    // } 
   });
   stepper_input.addEventListener("change", () => {
     amount = document.querySelector(".stepper-input").value;
@@ -858,7 +864,8 @@ async function initBooking() {
       alert(`The sales increase more than the remaining capacity ${capacity}`)
       // return amount = 1;
       // timeSelect.innerHTML = "";
-      // timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
+      timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
+      // return amount = 1;
     } 
   });
 
