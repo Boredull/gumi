@@ -907,10 +907,10 @@ async function initBooking() {
         getRightTime();
       };
 
-      const currentSchedule = scheduleData[days][0];
-      const currentLocation = scheduleData.locations[0];
-      const currentResource = scheduleData.resources[0];
-      const ids = `${currentSchedule.id}_${currentSchedule.adminId}_${currentSchedule.productId}_${currentSchedule.variantId}_${(currentLocation === null || currentLocation === void 0 ? void 0 : currentLocation.id) || 0}_${(currentResource === null || currentResource === void 0 ? void 0 : currentResource.id) || 0}`;
+      // const currentSchedule = scheduleData[days][0];
+      // const currentLocation = scheduleData.locations[0];
+      // const currentResource = scheduleData.resources[0];
+      // const ids = `${currentSchedule.id}_${currentSchedule.adminId}_${currentSchedule.productId}_${currentSchedule.variantId}_${(currentLocation === null || currentLocation === void 0 ? void 0 : currentLocation.id) || 0}_${(currentResource === null || currentResource === void 0 ? void 0 : currentResource.id) || 0}`;
   bookButton.addEventListener("click", async () => {
     if (timeSelect.options[0].value == "none") {
       alert("Please select suitable location or resource");
@@ -935,14 +935,14 @@ async function initBooking() {
                   type: "text",
                 },
                 // ...extra,
-                {
-                  name:'uniqueCode',
-                  value: ids,
-                  type: 'text',
-                  show: true,
-                  export: true,
-                  extInfo: '',
-                },
+                // {
+                //   name:'uniqueCode',
+                //   value: ids,
+                //   type: 'text',
+                //   show: true,
+                //   export: true,
+                //   extInfo: '',
+                // },
                 
               ],
             },
