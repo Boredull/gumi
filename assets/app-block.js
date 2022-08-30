@@ -648,7 +648,6 @@ function getProduct() {
 }
 
 async function initBooking() {
-  
   const product = await getProduct();
   // ctx.gProduct = product;
   console.log("product: ", JSON.stringify(product));
@@ -663,11 +662,11 @@ async function initBooking() {
     throw new Error("Current product is not a booking product");
   }
 
-  let sku ;
-  let amount;
+  let sku;
+  let amount = document.querySelector('.stepper-input').value;
   window.Shopline.event.on("DataReport::ViewContent", ({ data }) => {
     sku = data.content_sku_id;
-    
+
     console.log(" sku: ", sku);
   });
 
@@ -688,7 +687,7 @@ async function initBooking() {
       // warning(translation.failed_to_find_the_schedule);
       throw err;
     });
-  // console.log("scheduleData: ", JSON.stringify(scheduleData));
+  console.log("scheduleData: ", JSON.stringify(scheduleData));
 
   // const schedules = scheduleData || {};
   //       const days = Object.keys(schedules).filter((date) =>{
@@ -702,7 +701,7 @@ async function initBooking() {
   const yesterday = new Date(today);
   const bookButton = document.querySelector(".bookButton");
   const selectDate = document.querySelector(".selectDate");
-  
+
   yesterday.setDate(yesterday.getDate() - 1);
   let toDay = today.toISOString().substring(0, 10);
   let selectDay;
@@ -767,6 +766,11 @@ async function initBooking() {
       return arr.find((item) => item.name == name).businessHours;
     }
 
+
+    function getCapacity(name,arr) {
+      return arr.find((item)=> item.name == name).capacity;
+    }
+
     const resourceIndex = resource.selectedIndex;
     const resourceValue = resource.options[resourceIndex].value;
     // console.log(resource.options[resourceIndex].value);
@@ -774,6 +778,14 @@ async function initBooking() {
       const times = getTimes(resourceValue, scheduleData.resources);
       resourceStart = times[0].start;
       resourceEnd = times[0].end;
+
+      let capacity = getCapacity(resourceValue, scheduleData.resources);
+          console.log(capacity);
+          if(amount > capacity){
+          // alert("The sales increase more than the remaining capacity")
+          timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`
+        }
+
       // console.log("resourceStart", resourceStart);
       // console.log("resourceEnd", resourceEnd);
     } else {
@@ -836,11 +848,54 @@ async function initBooking() {
   //     logger.error('add to cart error: ', err)
   //   });
   // });
-  window.Shopline.event.on('DataReport::ViewContent',({data})=>{
-    amount = data.quantity;
-    logger.log("quantity",amount);
-    })
-  bookButton.addEventListener("click", async() => {
+
+  bookButton.addEventListener("click", async () => {
+    if (timeSelect.options[0].value == "none") {
+      alert("Please select suitable location or resource");
+    } else if (timeSelect.options[0].value == "Out of the remaining capacity") {
+      alert("Please select suitable quantity");
+    } else {
+      await fetcher(`${BASE_URL}/api/carts/ajax-cart/add.js`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          items: [
+            {
+              id: sku,
+              quantity: amount,
+              properties: [
+                {
+                  name: "Booking",
+                  // format('YYYY-MM-DD'),
+                  value: `${selectDay}`,
+                  type: "text",
+                },
+                // ...extra,
+                // {
+                //   name:'Date',
+                //   type: 'text',
+                //   show: true,
+                //   export: true,
+                //   extInfo: '',
+                // },
+              ],
+            },
+          ],
+        }),
+      })
+        .then((res) => {
+          logger.log("res: ", res);
+          // location.reload(); 重新加载显示增添
+          // 跳转
+          Shopline.event.emit("Cart::NavigateCart");
+          // location.href =`${BASE_URL}/cart`
+        })
+        .catch((err) => {
+          logger.error("add to cart error: ", err);
+        });
+    }
     // const extra = [];
     //         if (scheduleData.locations) {
     //             extra.push({
@@ -860,49 +915,7 @@ async function initBooking() {
     //                 export: true,
     //             });
     //         }
-   await fetcher(`${BASE_URL}/api/carts/ajax-cart/add.js`, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body:JSON.stringify({
-        items:[
-          {
-            id : sku,
-            quantity:amount,
-            properties:[
-              {
-                name: 'Booking',
-                // format('YYYY-MM-DD'),
-                 value:`${selectDay}`,
-                type: 'text',
-              },
-              // ...extra,
-              // {
-              //   name:'Date',
-              //   type: 'text',
-              //   show: true,
-              //   export: true,
-              //   extInfo: '',
-              // },
-            ],
-          }
-        ]
-      })
-    })
-      .then((res) => {
-        logger.log("res: ", res);
-        // location.reload(); 重新加载显示增添
-        // 跳转
-        Shopline.event.emit('Cart::NavigateCart');
-        // location.href =`${BASE_URL}/cart`
-      }
-      )
-      .catch((err) => {
-        logger.error("add to cart error: ", err);
-      });
-  }
-  );
+  });
   // window.Shoopline.event.emit('Cart::NavigateCart');
 }
 // 给button按钮绑定跳转
