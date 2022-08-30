@@ -742,15 +742,15 @@ async function initBooking() {
   let end = "";
   // let amount;
 
-  const resourceIndex = resource.selectedIndex;
-  const resourceValue = resource.options[resourceIndex].value;
+  
 
   function getRightTime() {
     let locationStart = "";
     let locationEnd = "";
     let resourceStart = "";
     let resourceEnd = "";
-
+    const resourceIndex = resource.selectedIndex;
+    const resourceValue = resource.options[resourceIndex].value;
     const locationIndex = locationLabel.selectedIndex;
     const locationValue = locationLabel.options[locationIndex].value;
     // console.log(locations.options[locationIndex].value);
@@ -837,7 +837,7 @@ async function initBooking() {
   stepper_after.addEventListener("click", () => {
     amount = document.querySelector(".stepper-input").value;
     console.log(amount);
-    if (resourceValue && amount > capacity) {
+    if ( amount > capacity) {
       alert(`The sales increase more than the remaining capacity ${capacity}`)
       // stepper_after.style.pointerEvents = "none";
       // timeSelect.innerHTML = "";
@@ -853,7 +853,7 @@ async function initBooking() {
   stepper_before.addEventListener("click", () => { 
     amount = document.querySelector(".stepper-input").value;
     console.log(amount);
-    if (resourceValue && amount > capacity) {
+    if ( amount > capacity) {
       timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
       alert(`The sales increase more than the remaining capacity ${capacity}`)
     } else {
@@ -869,7 +869,7 @@ async function initBooking() {
   stepper_input.addEventListener("change", () => {
     amount = document.querySelector(".stepper-input").value;
     console.log(amount);
-    if (resourceValue && amount > capacity) {
+    if ( amount > capacity) {
       alert(`The sales increase more than the remaining capacity ${capacity}`)
       // return amount = 1;
       // timeSelect.innerHTML = "";
