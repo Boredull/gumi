@@ -741,7 +741,7 @@ async function initBooking() {
   let start = "";
   let end = "";
   // let amount;
-
+  let gResourceValue;
   
 
   function getRightTime() {
@@ -752,6 +752,7 @@ async function initBooking() {
     const resourceIndex = resource.selectedIndex;
     const resourceValue = resource.options[resourceIndex].value;
     const locationIndex = locationLabel.selectedIndex;
+    gResourceValue = resourceValue;
     const locationValue = locationLabel.options[locationIndex].value;
     // console.log(locations.options[locationIndex].value);
     if (locationValue) {
@@ -830,7 +831,7 @@ async function initBooking() {
   const stepper_before = document.querySelector(".stepper-before");
   const stepper_after = document.querySelector(".stepper-after");
   const stepper_input = document.querySelector(".stepper-input");
-  let capacity = getCapacity(resourceValue, scheduleData.resources);
+  let capacity = getCapacity(gResourceValue, scheduleData.resources);
   console.log(capacity);
   
 
