@@ -663,7 +663,7 @@ async function initBooking() {
   }
 
   let sku;
-  let amount = document.querySelector('.stepper-input').value;
+
   window.Shopline.event.on("DataReport::ViewContent", ({ data }) => {
     sku = data.content_sku_id;
 
@@ -740,6 +740,10 @@ async function initBooking() {
   // console.log(product.price);
   let start = "";
   let end = "";
+  // let amount;
+
+  const resourceIndex = resource.selectedIndex;
+  const resourceValue = resource.options[resourceIndex].value;
   function getRightTime() {
     let locationStart = "";
     let locationEnd = "";
@@ -766,25 +770,13 @@ async function initBooking() {
       return arr.find((item) => item.name == name).businessHours;
     }
 
-
-    function getCapacity(name,arr) {
-      return arr.find((item)=> item.name == name).capacity;
-    }
-
-    const resourceIndex = resource.selectedIndex;
-    const resourceValue = resource.options[resourceIndex].value;
+    
     // console.log(resource.options[resourceIndex].value);
+
     if (resourceValue) {
       const times = getTimes(resourceValue, scheduleData.resources);
       resourceStart = times[0].start;
       resourceEnd = times[0].end;
-
-      let capacity = getCapacity(resourceValue, scheduleData.resources);
-          console.log(capacity);
-          if(amount > capacity){
-          // alert("The sales increase more than the remaining capacity")
-          timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`
-        }
 
       // console.log("resourceStart", resourceStart);
       // console.log("resourceEnd", resourceEnd);
@@ -821,17 +813,54 @@ async function initBooking() {
 
     //  console.log(updateStart.splice(2,0,":").join(""));
     // timeSelect.innerHTML += `<option >${start} - ${updateStart} </option>`
+
+    
+  }
+// 判断加购数量是否超过剩余数量
+  function getCapacity(name, arr) {
+    return arr.find((item) => item.name == name).capacity;
   }
 
-  getRightTime();
-  locationLabel.onchange = function () {
-    timeSelect.innerHTML = "";
-    getRightTime();
-  };
-  resource.onchange = function () {
-    timeSelect.innerHTML = "";
-    getRightTime();
-  };
+  
+
+  let amount;
+  const stepper_before = document.querySelector(".stepper-before");
+  const stepper_after = document.querySelector(".stepper-after");
+  const stepper_input = document.querySelector(".stepper-input");
+  let capacity = getCapacity(resourceValue, scheduleData.resources);
+  console.log(capacity);
+  
+
+  stepper_after.addEventListener("click", () => {
+    amount = document.querySelector(".stepper-input").value;
+    console.log(amount);
+    if (resourceValue && amount > capacity) {
+      alert(`The sales increase more than the remaining capacity ${capacity}`)
+      stepper_after.style.pointerEvents = none;
+      // timeSelect.innerHTML = "";
+      // timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
+    } 
+  });
+  stepper_before.addEventListener("click", () => { 
+    amount = document.querySelector(".stepper-input").value;
+    console.log(amount);
+    if (resourceValue && amount > capacity) {
+      alert(`The sales increase more than the remaining capacity ${capacity}`)
+      stepper_before.style.cursor = not-allowed;
+      // timeSelect.innerHTML = "";
+      // timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
+    } 
+  });
+  stepper_input.addEventListener("change", () => {
+    amount = document.querySelector(".stepper-input").value;
+    console.log(amount);
+    if (resourceValue && amount > capacity) {
+      alert(`The sales increase more than the remaining capacity ${capacity}`)
+      // return amount = 1;
+      // timeSelect.innerHTML = "";
+      // timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
+    } 
+  });
 
   // addEve
   // bookButton.addEventListener('click')
@@ -848,6 +877,17 @@ async function initBooking() {
   //     logger.error('add to cart error: ', err)
   //   });
   // });
+
+      getRightTime();
+      locationLabel.onchange = function () {
+        timeSelect.innerHTML = "";
+        getRightTime();
+      };
+      resource.onchange = function () {
+        timeSelect.innerHTML = "";
+        getRightTime();
+      };
+
 
   bookButton.addEventListener("click", async () => {
     if (timeSelect.options[0].value == "none") {
