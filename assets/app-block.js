@@ -744,6 +744,7 @@ async function initBooking() {
 
   const resourceIndex = resource.selectedIndex;
   const resourceValue = resource.options[resourceIndex].value;
+
   function getRightTime() {
     let locationStart = "";
     let locationEnd = "";
@@ -790,7 +791,7 @@ async function initBooking() {
     console.log(start);
     console.log(end);
 
-    if (start < end) {
+    if (start < end && amount <= capacity) {
       timeSelect.innerHTML += `<option selected disabled hidden>${start} - ${end} </option>`;
       let timeDifference = end.substring(0, 2) - start.substring(0, 2);
       for (let i = 0; i < timeDifference; i++) {
@@ -850,6 +851,9 @@ async function initBooking() {
     if (resourceValue && amount > capacity) {
       timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
       alert(`The sales increase more than the remaining capacity ${capacity}`)
+    } else {
+      timeSelect.innerHTML = "";
+        getRightTime();
     }
       // stepper_before.style.pointerEvents = "none";
       // return amount = 1;
@@ -866,7 +870,10 @@ async function initBooking() {
       // timeSelect.innerHTML = "";
       timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
       // return amount = 1;
-    } 
+    } else {
+      timeSelect.innerHTML = "";
+        getRightTime();
+    }
   });
 
   // addEve
