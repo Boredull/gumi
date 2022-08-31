@@ -1,16 +1,11 @@
 <div class="theme-app-extension__app-block" data-id="{{ block.id }}">
-  <div style="text-align: center; font-size: 16px; font-weight: bolder">
-    Select appointment
-  </div>
+  <div style="text-align: center; font-size: 16px; font-weight: bolder">Select appointment</div>
   <div class="information" style="gap: 16px; margin-bottom: 16px">
     <!-- Select location -->
     <div style="font-size: 16px">
       <!-- <span style="color: red">*</span> -->
       <div style="margin: 10px 0">Select location</div>
-      <select
-        class="location"
-        style="height: 36px; width: 100%; border-radius: 5px; padding-left: 5px"
-      >
+      <select class="location" style="height: 36px; width: 100%; border-radius: 5px; padding-left: 5px">
         <!-- <option value="Choose any">
           <div style="margin: 5px">测试地点2</div>
         </option> -->
@@ -20,15 +15,7 @@
     <div style="vertical-align: middle; font-size: 16px">
       <!-- <span style="color: red">*</span> -->
       <div style="margin: 10px 0">Select resource</div>
-      <select
-        class="resource"
-        style="
-          min-height: 36px;
-          width: 100%;
-          border-radius: 5px;
-          padding-left: 5px;
-        "
-      >
+      <select class="resource" style="min-height: 36px; width: 100%; border-radius: 5px; padding-left: 5px">
         <!-- <option value="none" selected disabled hidden>Choose any</option>
        <option value="1">测试容量1</option>
         <option>测试容量2</option> -->
@@ -40,13 +27,7 @@
     <!-- <div class="rightTime"></div> -->
     <select
       class="timeSelect"
-      style="
-        display: none;
-        text-align: center;
-        min-height: 36px;
-        width: 100%;
-        border-radius: 5px;margin-bottom: 20px;
-      "
+      style="display: none; text-align: center; min-height: 36px; width: 100%; border-radius: 5px; margin-bottom: 20px"
     >
       <!-- <option value="1">9:00  -  10:00 </option>
       <option value="2">10:00  -  11:00 </option>
@@ -85,9 +66,7 @@
       border-radius: 3px;
     "
   >
-    <span style="color: #3e4e57; font-weight: bolder; position: absolute">
-      Select Date
-    </span>
+    <span style="color: #3e4e57; font-weight: bolder; position: absolute"> Select Date </span>
   </div>
 
   <button
@@ -107,18 +86,11 @@
       cursor: pointer;
     "
   >
-    <div
-      class="buttonText"
-      style="color: #3e4e57; font-weight: bolder; position: absolute"
-    >
-      Book Now
-    </div>
+    <div class="buttonText" style="color: #3e4e57; font-weight: bolder; position: absolute">Book Now</div>
   </button>
 </div>
 
-{{#schema}} { "name": "t:appBlock.block.name", "target": "section",
-"stylesheet": ["app-block.css"], "javascript": ["app-block.js"], "templates":
-[], "settings": [ { "type": "text", "id": "title", "label":
-"t:appBlock.block.settings.title.label",
-"info":"t:appBlock.block.settings.title.info", "default": "App Block" } ] }
+{{#schema}} { "name": "t:appBlock.block.name", "target": "section", "stylesheet": ["app-block.css"], "javascript":
+["app-block.js"], "templates": ["products/detail"], "settings": [ { "type": "text", "id": "title", "label":
+"t:appBlock.block.settings.title.label", "info":"t:appBlock.block.settings.title.info", "default": "App Block" } ] }
 {{/schema}}
