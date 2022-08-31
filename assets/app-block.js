@@ -820,18 +820,24 @@ async function initBooking() {
   }
 // 判断加购数量是否超过剩余数量
   function getCapacity(name, arr) {
-    return arr.find((item) => item.name == name).capacity || 0;
+    return arr.find((item) => item.name == name).capacity;
   }
 
   getRightTime();
 
   
-
+  let capacity ;
   let amount =1;
   const stepper_before = document.querySelector(".stepper-before");
   const stepper_after = document.querySelector(".stepper-after");
   const stepper_input = document.querySelector(".stepper-input");
-  let capacity = getCapacity(gResourceValue, scheduleData.resources);
+
+  if(gResourceValue){
+    return (capacity = getCapacity(gResourceValue, scheduleData.resources));
+  }else {
+    capacity=0;
+  }
+  
   console.log(capacity);
   
 
@@ -907,8 +913,8 @@ async function initBooking() {
         timeSelect.innerHTML = "";
         getRightTime();
       };
-
-      const currentSchedule = scheduleData[days][0];
+      
+      const currentSchedule = scheduleData[days[0]][0];
       const currentLocation = scheduleData.locations[0];
       const currentResource = scheduleData.resources[0];
       const ids = `${currentSchedule.id}_${currentSchedule.adminId}_${currentSchedule.productId}_${currentSchedule.variantId}_${(currentLocation === null || currentLocation === void 0 ? void 0 : currentLocation.id) || 0}_${(currentResource === null || currentResource === void 0 ? void 0 : currentResource.id) || 0}`;
