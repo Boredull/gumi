@@ -827,7 +827,7 @@ async function initBooking() {
 
   
 
-  let amount ;
+  let amount =1;
   const stepper_before = document.querySelector(".stepper-before");
   const stepper_after = document.querySelector(".stepper-after");
   const stepper_input = document.querySelector(".stepper-input");
@@ -950,7 +950,7 @@ async function initBooking() {
                   value: ids,
                   type: 'text',
                   show: false,
-                  "export": true,
+                  export : true,
                   extInfo: ''
               },
                 
