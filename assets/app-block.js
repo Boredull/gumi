@@ -820,7 +820,7 @@ async function initBooking() {
   }
 // 判断加购数量是否超过剩余数量
   function getCapacity(name, arr) {
-    return arr.find((item) => item.name == name).capacity;
+    return arr.find((item) => item.name == name).capacity || 0;
   }
 
   getRightTime();
