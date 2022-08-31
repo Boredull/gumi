@@ -918,7 +918,9 @@ async function initBooking() {
       const currentLocation = scheduleData.locations[0];
       const currentResource = scheduleData.resources[0];
       const ids = `${currentSchedule.id}_${currentSchedule.adminId}_${currentSchedule.productId}_${currentSchedule.variantId}_${(currentLocation === null || currentLocation === void 0 ? void 0 : currentLocation.id) || 0}_${(currentResource === null || currentResource === void 0 ? void 0 : currentResource.id) || 0}`;
-      sessionStorage.setItem("uniqueCode","ids");
+      
+      localStorage.setItem("uniqueCode",ids);
+
   bookButton.addEventListener("click", async () => {
     if (timeSelect.options[0].value == "none") {
       alert("Please select suitable location or resource");
