@@ -1,14 +1,14 @@
-const logger = {
-  log(...args) {
-    console.log("[BOOKING]: ", ...args);
-  },
-  warn(...args) {
-    console.warn("[BOOKING]: ", ...args);
-  },
-  error(...args) {
-    console.error("[BOOKING]: ", ...args);
-  },
-};
+// const logger = {
+//   log(...args) {
+//     console.log("[BOOKING]: ", ...args);
+//   },
+//   warn(...args) {
+//     console.warn("[BOOKING]: ", ...args);
+//   },
+//   error(...args) {
+//     console.error("[BOOKING]: ", ...args);
+//   },
+// };
 
 // console.log("this is app-block");
 
@@ -656,9 +656,12 @@ async function initBooking() {
     throw new Error("Failed to find current product: ");
   }
   if (!Array.isArray(product.tags)) {
+    // document.querySelector(".theme-app-extension__app-block").style.display = "none";
     throw new Error("Current product is not a booking product");
+    
   }
   if (!product.tags.includes("booking")) {
+    // document.querySelector(".theme-app-extension__app-block").style.display = "none";
     throw new Error("Current product is not a booking product");
   }
 
