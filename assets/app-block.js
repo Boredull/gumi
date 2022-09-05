@@ -648,9 +648,9 @@ function getProduct() {
 }
 
 async function initBooking() {
-  // const product = await getProduct();
+  const product = await getProduct();
   // ctx.gProduct = product;
-  console.log("product: ", JSON.stringify(product));
+  // console.log("product: ", JSON.stringify(product));
   if (!product) {
     // logger.error('Failed to find current product: ');
     throw new Error("Failed to find current product: ");
