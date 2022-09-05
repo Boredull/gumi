@@ -653,16 +653,23 @@ async function initBooking() {
   // console.log("product: ", JSON.stringify(product));
   if (!product) {
     // logger.error('Failed to find current product: ');
+    document.querySelector(".theme-app-extension__app-block").style.display = "none";
     throw new Error("Failed to find current product: ");
+  } else {
+    document.querySelector(".product-button-list").style.display = "none";
   }
   if (!Array.isArray(product.tags)) {
     document.querySelector(".theme-app-extension__app-block").style.display = "none";
     throw new Error("Current product is not a booking product");
     
+  }else {
+    document.querySelector(".product-button-list").style.display = "none";
   }
   if (!product.tags.includes("booking")) {
     document.querySelector(".theme-app-extension__app-block").style.display = "none";
     throw new Error("Current product is not a booking product");
+  }else {
+    document.querySelector(".product-button-list").style.display = "none";
   }
 
   let sku;
@@ -690,6 +697,8 @@ async function initBooking() {
       // warning(translation.failed_to_find_the_schedule);
       throw err;
     });
+
+
   console.log("scheduleData: ", JSON.stringify(scheduleData));
 
   const schedules = scheduleData || {};
