@@ -1,16 +1,16 @@
-// const logger = {
-//   log(...args) {
-//     console.log("[BOOKING]: ", ...args);
-//   },
-//   warn(...args) {
-//     console.warn("[BOOKING]: ", ...args);
-//   },
-//   error(...args) {
-//     console.error("[BOOKING]: ", ...args);
-//   },
-// };
+const logger = {
+  log(...args) {
+    console.log("[BOOKING]: ", ...args);
+  },
+  warn(...args) {
+    console.warn("[BOOKING]: ", ...args);
+  },
+  error(...args) {
+    console.error("[BOOKING]: ", ...args);
+  },
+};
 
-// console.log("this is app-block");
+console.log("this is app-block");
 
 // var bookingDays = [];
 !(function (t) {
@@ -648,7 +648,7 @@ function getProduct() {
 }
 
 async function initBooking() {
-  const product = await getProduct();
+  // const product = await getProduct();
   // ctx.gProduct = product;
   console.log("product: ", JSON.stringify(product));
   if (!product) {
@@ -656,12 +656,12 @@ async function initBooking() {
     throw new Error("Failed to find current product: ");
   }
   if (!Array.isArray(product.tags)) {
-    // document.querySelector(".theme-app-extension__app-block").style.display = "none";
+    document.querySelector(".theme-app-extension__app-block").style.display = "none";
     throw new Error("Current product is not a booking product");
     
   }
   if (!product.tags.includes("booking")) {
-    // document.querySelector(".theme-app-extension__app-block").style.display = "none";
+    document.querySelector(".theme-app-extension__app-block").style.display = "none";
     throw new Error("Current product is not a booking product");
   }
 
@@ -699,6 +699,13 @@ async function initBooking() {
   console.log('day',days);
   //  bookingDays = day.concat();
   //  console.log('bookingDays',bookingDays);
+  
+  
+  
+  const select_location = document.querySelector(".select-location");
+  const select_resource = document.querySelector(".select-resource");
+  select_location.style.display = scheduleData.locations.length == 0 ? "none": "block";   
+  select_resource.style.display = scheduleData.resources.length == 0 ? "none" : "block";
 
   const today = new Date();
   const yesterday = new Date(today);
@@ -979,7 +986,7 @@ async function initBooking() {
           // location.href =`${BASE_URL}/cart`
         })
         .catch((err) => {
-          logger.error("add to cart error: ", err);
+          console.error("add to cart error: ", err);
         });
     }
     // const extra = [];
