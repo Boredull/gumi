@@ -1,18 +1,18 @@
-const logger = {
-  log(...args) {
-    console.log("[BOOKING]: ", ...args);
-  },
-  warn(...args) {
-    console.warn("[BOOKING]: ", ...args);
-  },
-  error(...args) {
-    console.error("[BOOKING]: ", ...args);
-  },
-};
+// const logger = {
+//   log(...args) {
+//     console.log("[BOOKING]: ", ...args);
+//   },
+//   warn(...args) {
+//     console.warn("[BOOKING]: ", ...args);
+//   },
+//   error(...args) {
+//     console.error("[BOOKING]: ", ...args);
+//   },
+// };
 
 console.log("this is app-block");
 
-// var bookingDays = [];
+// hello-week 日历
 !(function (t) {
   "use strict";
   const e = "hello-week",
@@ -614,6 +614,7 @@ console.log("this is app-block");
     Object.defineProperty(t, "__esModule", { value: !0 });
 })({});
 
+// 封装请求
 const BASE_URL = window.origin;
 // @ts-ignore
 // 区分开发环境
@@ -647,6 +648,9 @@ function getProduct() {
   return fetcher(`${BASE_URL}/api/product/products.json?handle=${gProductHandle}`).then((res) => res.products[0]);
 }
 
+let getWeekDay;
+let weeks1;
+
 async function initBooking() {
   const product = await getProduct();
   // ctx.gProduct = product;
@@ -661,14 +665,13 @@ async function initBooking() {
   if (!Array.isArray(product.tags)) {
     document.querySelector(".theme-app-extension__app-block").style.display = "none";
     throw new Error("Current product is not a booking product");
-    
-  }else {
+  } else {
     document.querySelector(".product-button-list").style.display = "none";
   }
   if (!product.tags.includes("booking")) {
     document.querySelector(".theme-app-extension__app-block").style.display = "none";
     throw new Error("Current product is not a booking product");
-  }else {
+  } else {
     document.querySelector(".product-button-list").style.display = "none";
   }
 
@@ -677,7 +680,7 @@ async function initBooking() {
   window.Shopline.event.on("DataReport::ViewContent", ({ data }) => {
     sku = data.content_sku_id;
 
-    console.log(" sku: ", sku);
+    // console.log(" sku: ", sku);
   });
 
   // 请求预约日期信息
@@ -697,24 +700,34 @@ async function initBooking() {
       // warning(translation.failed_to_find_the_schedule);
       throw err;
     });
-
-
-  console.log("scheduleData: ", JSON.stringify(scheduleData));
+  // console.log("scheduleData: ", JSON.stringify(scheduleData));
 
   const schedules = scheduleData || {};
-  const days = Object.keys(schedules).filter((date) =>{
-          return /\d{2}-\d{2}-\d{2}/.test(date);
-         });
-  console.log('day',days);
+  const days = Object.keys(schedules).filter((date) => {
+    return /\d{2}-\d{2}-\d{2}/.test(date);
+  });
+  // console.log("day", days);
   //  bookingDays = day.concat();
   //  console.log('bookingDays',bookingDays);
-  
-  
-  
+
+  // 如果没有resources与locations,不显示这2个下拉框
   const select_location = document.querySelector(".select-location");
   const select_resource = document.querySelector(".select-resource");
-  select_location.style.display = scheduleData.locations.length == 0 ? "none": "block";   
+  select_location.style.display = scheduleData.locations.length == 0 ? "none" : "block";
   select_resource.style.display = scheduleData.resources.length == 0 ? "none" : "block";
+
+  // 找到昨天，让今天之前的日期不可选
+  function getMyDay(date){
+    var week;
+    if(date.getDay()==0) week="Sunday";
+    if(date.getDay()==1) week="Monday";
+    if(date.getDay()==2) week="Tuesday";
+    if(date.getDay()==3) week="Wednesday";
+    if(date.getDay()==4) week="Thursday";
+    if(date.getDay()==5) week="Friday";
+    if(date.getDay()==6) week="Saturday";
+    return week;
+  }
 
   const today = new Date();
   const yesterday = new Date(today);
@@ -741,130 +754,232 @@ async function initBooking() {
     onSelect: () => {
       selectDay = calendar.getDaySelected()[0];
       console.log(selectDay);
+
+      // 可以优化，判断选择日期大于今天才显示时间选择框与book,selectDate按钮
       selectDate.style.display = selectDay >= toDay ? "none" : "flex";
       timeSelect.style.display = selectDay >= toDay ? "block" : "none";
       bookButton.style.display = selectDay >= toDay ? "flex" : "none";
+      getWeekDay = getMyDay(new Date(selectDay));
+      // console.log(getWeekDay);
+      messageTime();
+      display();
     },
   });
 
-  const timeSelect = document.querySelector(".timeSelect");
-  const locationLabel = document.querySelector(".location");
-  const resource = document.querySelector(".resource");
+
+  const parse = (str, options = {}) => {
+    if (typeof str !== "string") return str;
+    const { onFallback = () => null } = options;
+    try {
+      return JSON.parse(str);
+    } catch (err) {
+      return onFallback(err);
+    }
+  };
+
+      const timeSelect = document.querySelector(".timeSelect");
+      const locationLabel = document.querySelector(".location");
+      const resource = document.querySelector(".resource");
   // const Price = document.querySelector(".Price");
+
+  // 显示下拉框内容
   resource.innerHTML = scheduleData.resources.map((resource) => `<option >${resource.name}</option>`);
   locationLabel.innerHTML = scheduleData.locations.map((location) => `<option >${location.name}</option>`);
-  locationLabel.innerHTML += "<option> </option>";
+  // locationLabel.innerHTML += "<option> </option>";
   resource.innerHTML += scheduleData.requireStatus == 1 ? "" : "<option> </option>";
   // Price.innerHTML = `Price: ${product.price}`;
   // console.log(product.price);
-  let start = "";
-  let end = "";
+  // let start = "";
+  // let end = "";
   // let amount;
-  let gResourceValue;
+
+
+  function display() {
+    console.log("weeks1", weeks1);
+    console.log("getWeekDay", getWeekDay);
+    const weekTime = weeks1.find((item) => item.weekName == getWeekDay).list;
+    console.log("weekTime", weekTime);
+    if (weekTime.length == 0) {
+      timeSelect.innerHTML = `<option selected disabled hidden>none</option>`;
+      alert("no suitable time");
+    } else {
+      timeSelect.innerHTML = `<option selected disabled hidden>${weekTime[0].start} - ${weekTime[0].end} </option>`;
+      let timeDifference = weekTime[0].end.substring(0, 2) - weekTime[0].start.substring(0, 2);
+      for (let i = 0; i < timeDifference; i++) {
+        let updateStart = parseInt(weekTime[0].start.substring(0, 2)) + 1 + ":" + "00";
+        timeSelect.innerHTML += `<option >${weekTime[0].start} - ${updateStart} </option>`;
+        weekTime[0].start = updateStart;
+      }
+    }
+    return weekTime;
+  }
+  
+  function getTimes(name, arr) {
+    return arr.find((item) => item.name == name).times;
+  }
   
 
-  function getRightTime() {
-    let locationStart = "";
-    let locationEnd = "";
-    let resourceStart = "";
-    let resourceEnd = "";
+
+  
+  function messageTime() {
+    let weeks2;
+    const locationIndex = locationLabel.selectedIndex;
+    const locationValue = locationLabel.options[locationIndex].value;
     const resourceIndex = resource.selectedIndex;
     const resourceValue = resource.options[resourceIndex].value;
-    const locationIndex = locationLabel.selectedIndex;
-    gResourceValue = resourceValue;
-    const locationValue = locationLabel.options[locationIndex].value;
-    // console.log(locations.options[locationIndex].value);
-    if (locationValue) {
-      const times = getTimes(locationValue, scheduleData.locations);
-      // console.log(times);
-      locationStart = times[0].start;
-      locationEnd = times[0].end;
-      // console.log("locationStart", locationStart);
-      // console.log("locationEnd", locationEnd);
-    } else {
-      locationStart = "00:00";
-      locationEnd = "24:00";
-    }
-
-    // 封装通过下拉框选中的地址找到对应的时间段\id\capacity
-    function getTimes(name, arr) {
-      return arr.find((item) => item.name == name).businessHours;
-    }
-
-    
-    // console.log(resource.options[resourceIndex].value);
-
-    if (resourceValue) {
-      const times = getTimes(resourceValue, scheduleData.resources);
-      resourceStart = times[0].start;
-      resourceEnd = times[0].end;
-
-      // console.log("resourceStart", resourceStart);
-      // console.log("resourceEnd", resourceEnd);
-    } else {
-      resourceStart = "00:00";
-      resourceEnd = "24:00";
-    }
-
-    start = locationStart > resourceStart ? locationStart : resourceStart;
-    end = locationEnd < resourceEnd ? locationEnd : resourceEnd;
-    console.log(start);
-    console.log(end);
-
-    if (start < end ) {
-      timeSelect.innerHTML += `<option selected disabled hidden>${start} - ${end} </option>`;
-      let timeDifference = end.substring(0, 2) - start.substring(0, 2);
-      for (let i = 0; i < timeDifference; i++) {
-        let updateStart = parseInt(start.substring(0, 2)) + 1 + ":" + "00";
-        timeSelect.innerHTML += `<option >${start} - ${updateStart} </option>`;
-        start = updateStart;
+    if (locationValue && resourceValue) {
+      const times1 = parse(getTimes(locationValue, scheduleData.locations));
+      // console.log(times1);
+      weeks1 = times1[0].weeks;
+      console.log("location :", JSON.stringify(weeks1));
+      const times2 = parse(getTimes(resourceValue, scheduleData.resources));
+      weeks2 = times2[0].weeks;
+      console.log("resource :", JSON.stringify(weeks2));
+      for (let i = 0; i < 7; i++) {
+        weeks1[i].isClosed = weeks1[i].isClosed || weeks2[i].isClosed;
+        if (weeks1[i].isClosed || weeks2[i].isClosed) {
+          weeks1[i].isAllDay = false;
+        }
+        weeks1[i].isAllDay = weeks1[i].isAllDay || weeks2[i].isAllDay;
+        weeks1[i].weekName = weeks1[i].weekName;
+  
+        if (weeks1[i].isClosed) {
+          weeks1[i].list = [];
+        } else if (weeks1[i].isAllDay) {
+          weeks1[i].list = [{ start: "00:00", end: "24:00" }];
+        } else if (weeks1[i].list.length == 0) {
+          weeks1[i].list = weeks2[i].list;
+        } else if (weeks2[i].list.length == 0) {
+          weeks1[i].list = weeks1[i].list;
+        } else if (weeks1[i].list.length != 0 && weeks1[i].list.length != 0) {
+          // 坑： 正常是多个时间段 ，这里只选择了第一个时间段
+          weeks1[i].list[0].start =
+            weeks1[i].list[0].start > weeks2[i].list[0].start ? weeks1[i].list[0].start : weeks2[i].list[0].start;
+          weeks1[i].list[0].end =
+            weeks1[i].list[0].end < weeks2[i].list[0].end ? weeks1[i].list[0].end : weeks2[i].list[0].end;
+          if (weeks1[i].list[0].start >= weeks1[i].list[0].end) {
+            weeks1[i].list = [];
+          }
+        }
       }
-    } else {
-      timeSelect.innerHTML = `<option selected disabled hidden>none</option>`;
+      // console.log(weeks1);
     }
-    // console.log((end)/1000);
-    // console.log(start.substring(0,2));
-    // console.log(end.substring(0,2)-start.substring(0,2));
-    // console.log(start.split(":").join(""));
-    // if(start.substring(0,2)<end.substring(0,2)){
-    // let i = 1;
-    //  let updateStart = [...(start.split(":").join(""))].splice(2,0,":").join("");
-    // let updateStart = [...(start.split(":").join(""))];
-    //  console.log(updateStart);
+    return weeks1;
+  }
 
-    //  console.log(updateStart.splice(2,0,":").join(""));
-    // timeSelect.innerHTML += `<option >${start} - ${updateStart} </option>`
+  messageTime();
+
+
+  locationLabel.onchange = function () {
+    timeSelect.innerHTML = "";
+    messageTime();
+    display();
+  };
+  resource.onchange = function () {
+    timeSelect.innerHTML = "";
+    messageTime();
+    display();
+  };
+
+
+  const resourceIndex = resource.selectedIndex;
+  const gResourceValue = resource.options[resourceIndex].value;
+
+  // function getRightTime() {
+  //   let locationStart = "";
+  //   let locationEnd = "";
+  //   let resourceStart = "";
+  //   let resourceEnd = "";
 
     
-  }
-// 判断加购数量是否超过剩余数量
+  //   const locationValue = locationLabel.options[locationIndex].value;
+  //   // console.log(locations.options[locationIndex].value);
+  //   if (locationValue) {
+  //     const times = getTimes(locationValue, scheduleData.locations);
+  //     // console.log(times);
+  //     locationStart = times[0].start;
+  //     locationEnd = times[0].end;
+  //     // console.log("locationStart", locationStart);
+  //     // console.log("locationEnd", locationEnd);
+  //   } else {
+  //     locationStart = "00:00";
+  //     locationEnd = "24:00";
+  //   }
+
+  //   // 封装通过下拉框选中的地址找到对应的时间段\id\capacity
+  //   function getTimes(name, arr) {
+  //     return arr.find((item) => item.name == name).businessHours;
+  //   }
+
+  //   // console.log(resource.options[resourceIndex].value);
+
+  //   if (resourceValue) {
+  //     const times = getTimes(resourceValue, scheduleData.resources);
+  //     resourceStart = times[0].start;
+  //     resourceEnd = times[0].end;
+
+  //     // console.log("resourceStart", resourceStart);
+  //     // console.log("resourceEnd", resourceEnd);
+  //   } else {
+  //     resourceStart = "00:00";
+  //     resourceEnd = "24:00";
+  //   }
+
+  //   start = locationStart > resourceStart ? locationStart : resourceStart;
+  //   end = locationEnd < resourceEnd ? locationEnd : resourceEnd;
+  //   console.log(start);
+  //   console.log(end);
+
+  //   if (start < end) {
+  //     timeSelect.innerHTML += `<option selected disabled hidden>${start} - ${end} </option>`;
+  //     let timeDifference = end.substring(0, 2) - start.substring(0, 2);
+  //     for (let i = 0; i < timeDifference; i++) {
+  //       let updateStart = parseInt(start.substring(0, 2)) + 1 + ":" + "00";
+  //       timeSelect.innerHTML += `<option >${start} - ${updateStart} </option>`;
+  //       start = updateStart;
+  //     }
+  //   } else {
+  //     timeSelect.innerHTML = `<option selected disabled hidden>none</option>`;
+  //   }
+  //   // console.log((end)/1000);
+  //   // console.log(start.substring(0,2));
+  //   // console.log(end.substring(0,2)-start.substring(0,2));
+  //   // console.log(start.split(":").join(""));
+  //   // if(start.substring(0,2)<end.substring(0,2)){
+  //   // let i = 1;
+  //   //  let updateStart = [...(start.split(":").join(""))].splice(2,0,":").join("");
+  //   // let updateStart = [...(start.split(":").join(""))];
+  //   //  console.log(updateStart);
+
+  //   //  console.log(updateStart.splice(2,0,":").join(""));
+  //   // timeSelect.innerHTML += `<option >${start} - ${updateStart} </option>`
+  // }
+  // 判断加购数量是否超过剩余数量
   function getCapacity(name, arr) {
     return arr.find((item) => item.name == name).capacity;
   }
 
-  getRightTime();
+  // getRightTime();
 
-  
-  let capacity ;
-  let amount =1;
+  let capacity;
+  let amount = 1;
   const stepper_before = document.querySelector(".stepper-before");
   const stepper_after = document.querySelector(".stepper-after");
   const stepper_input = document.querySelector(".stepper-input");
 
-  if(gResourceValue){
+  if (gResourceValue) {
     return (capacity = getCapacity(gResourceValue, scheduleData.resources));
-  }else {
-    capacity=0;
+  } else {
+    capacity = 0;
   }
-  
+
   console.log(capacity);
-  
 
   stepper_after.addEventListener("click", () => {
     amount = document.querySelector(".stepper-input").value;
     console.log(amount);
-    if ( amount > capacity) {
-      alert(`The sales increase more than the remaining capacity ${capacity}`)
+    if (amount > capacity) {
+      alert(`The sales increase more than the remaining capacity ${capacity}`);
       // stepper_after.style.pointerEvents = "none";
       // timeSelect.innerHTML = "";
       timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
@@ -873,79 +988,63 @@ async function initBooking() {
       // stepper_after.style.pointerEvents = "auto";
       // stepper_before.style.pointerEvents = "auto";
       timeSelect.innerHTML = "";
-      getRightTime();
+      // getRightTime();
     }
   });
-  stepper_before.addEventListener("click", () => { 
+  stepper_before.addEventListener("click", () => {
     amount = document.querySelector(".stepper-input").value;
     console.log(amount);
-    if ( amount > capacity) {
+    if (amount > capacity) {
       timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
-      alert(`The sales increase more than the remaining capacity ${capacity}`)
+      alert(`The sales increase more than the remaining capacity ${capacity}`);
     } else {
       timeSelect.innerHTML = "";
-        getRightTime();
+      // getRightTime();
     }
-      // stepper_before.style.pointerEvents = "none";
-      // return amount = 1;
-      // timeSelect.innerHTML = "";
-      // timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
-    // } 
+    // stepper_before.style.pointerEvents = "none";
+    // return amount = 1;
+    // timeSelect.innerHTML = "";
+    // timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
+    // }
   });
   stepper_input.addEventListener("change", () => {
     amount = document.querySelector(".stepper-input").value;
     console.log(amount);
-    if ( amount > capacity) {
-      alert(`The sales increase more than the remaining capacity ${capacity}`)
+    if (amount > capacity) {
+      alert(`The sales increase more than the remaining capacity ${capacity}`);
       // return amount = 1;
       // timeSelect.innerHTML = "";
       timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
       // return amount = 1;
     } else {
       timeSelect.innerHTML = "";
-        getRightTime();
+      // getRightTime();
     }
   });
 
-  // addEve
-  // bookButton.addEventListener('click')
-  // logger.log("button: ", bookButton);
-  // bookButton.addEventListener("click", function () {
-  //   fetch(`${BASE_URL}/api/carts/ajax-cart/add.js`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   }).then(res => res.json()).then(res => {
-  //     logger.log('res: ', res)
-  //   }).catch(err => {
-  //     logger.error('add to cart error: ', err)
-  //   });
-  // });
 
-      
-      locationLabel.onchange = function () {
-        timeSelect.innerHTML = "";
-        getRightTime();
-      };
-      resource.onchange = function () {
-        timeSelect.innerHTML = "";
-        getRightTime();
-      };
-      
-      const currentSchedule = scheduleData[days[0]][0];
-      const currentLocation = scheduleData.locations[0];
-      const currentResource = scheduleData.resources[0];
-      const ids = `${currentSchedule.id}_${currentSchedule.adminId}_${currentSchedule.productId}_${currentSchedule.variantId}_${(currentLocation === null || currentLocation === void 0 ? void 0 : currentLocation.id) || 0}_${(currentResource === null || currentResource === void 0 ? void 0 : currentResource.id) || 0}`;
-      
-      localStorage.setItem("uniqueCode",ids);
+  
+
+  const currentSchedule = scheduleData[days[0]][0];
+  const currentLocation = scheduleData.locations[0];
+  const currentResource = scheduleData.resources[0];
+  const ids = `${currentSchedule.id}_${currentSchedule.adminId}_${currentSchedule.productId}_${
+    currentSchedule.variantId
+  }_${(currentLocation === null || currentLocation === void 0 ? void 0 : currentLocation.id) || 0}_${
+    (currentResource === null || currentResource === void 0 ? void 0 : currentResource.id) || 0
+  }`;
+
+  localStorage.setItem("uniqueCode", ids);
 
   bookButton.addEventListener("click", async () => {
+    console.log("Book Now",1);
     if (timeSelect.options[0].value == "none") {
       alert("Please select suitable location or resource");
-    } else if (timeSelect.options[0].value == "Out of the remaining capacity") {
+    } 
+    else if (timeSelect.options[0].value == "Out of the remaining capacity") {
       alert("Please select suitable quantity");
-    } else {
+    } 
+    else {
       await fetcher(`${BASE_URL}/api/carts/ajax-cart/add.js`, {
         method: "post",
         headers: {
@@ -965,23 +1064,22 @@ async function initBooking() {
                 },
                 // ...extra,
                 {
-                  name:'uniqueCode',
+                  name: "uniqueCode",
                   value: ids,
-                  type: 'text',
+                  type: "text",
                   show: true,
                   export: true,
-                  extInfo: '',
+                  extInfo: "",
                 },
                 {
-                  name: 'planIds',
+                  name: "planIds",
                   // addressId_resourceId
                   value: ids,
-                  type: 'text',
+                  type: "text",
                   show: false,
-                  export : true,
-                  extInfo: ''
-              },
-                
+                  export: true,
+                  extInfo: "",
+                },
               ],
             },
           ],
@@ -998,28 +1096,31 @@ async function initBooking() {
           console.error("add to cart error: ", err);
         });
     }
-    // const extra = [];
-    //         if (scheduleData.locations) {
-    //             extra.push({
-    //                 name: 'Location',
-    //                 value: locationValue,
-    //                 type: 'text',
-    //                 show: true,
-    //                 export: true,
-    //             });
-    //         }
-    //         if (scheduleData.resources) {
-    //             extra.push({
-    //                 name: 'Resource',
-    //                 value: currentResource.name,
-    //                 type: 'text',
-    //                 show: true,
-    //                 export: true,
-    //             });
-    //         }
   });
   // window.Shoopline.event.emit('Cart::NavigateCart');
 }
 // 给button按钮绑定跳转
 
+
+
 initBooking();
+
+
+// async function main() {
+//   try {
+//       logger.log('booking start...');
+//       logger.log('current version: 1.3');
+//       await prepare();
+//       // await initShoplineEvent();
+//       await initBooking();
+//       // await injectDep();
+//       await injectDep();
+//       await resetEl();
+//       await initEvent();
+//       logger.log('booking end...');
+//   }
+//   catch (err) {
+//       logger.warn('booking error with ', err);
+//   }
+// }
+// main();
