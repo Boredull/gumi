@@ -831,10 +831,10 @@ async function initBooking() {
       const times1 = parse(getTimes(locationValue, scheduleData.locations));
       // console.log(times1);
       weeks1 = times1[0].weeks;
-      console.log("location :", JSON.stringify(weeks1));
+      // console.log("location :", JSON.stringify(weeks1));
       const times2 = parse(getTimes(resourceValue, scheduleData.resources));
       weeks2 = times2[0].weeks;
-      console.log("resource :", JSON.stringify(weeks2));
+      // console.log("resource :", JSON.stringify(weeks2));
       for (let i = 0; i < 7; i++) {
         weeks1[i].isClosed = weeks1[i].isClosed || weeks2[i].isClosed;
         if (weeks1[i].isClosed || weeks2[i].isClosed) {
@@ -869,7 +869,6 @@ async function initBooking() {
 
   messageTime();
 
-
   locationLabel.onchange = function () {
     timeSelect.innerHTML = "";
     messageTime();
@@ -881,79 +880,85 @@ async function initBooking() {
     display();
   };
 
+  const currentSchedule = scheduleData[days[0]][0];
+  const currentLocation = scheduleData.locations[0];
+  const currentResource = scheduleData.resources[0];
+  const ids = `${currentSchedule.id}_${currentSchedule.adminId}_${currentSchedule.productId}_${
+    currentSchedule.variantId
+  }_${(currentLocation === null || currentLocation === void 0 ? void 0 : currentLocation.id) || 0}_${
+    (currentResource === null || currentResource === void 0 ? void 0 : currentResource.id) || 0
+  }`;
+
+  localStorage.setItem("uniqueCode", ids);
+  console.log(ids);
+
+
+  bookButton.addEventListener("click", async () => {
+    console.log("Book Now",1);
+    if (timeSelect.options[0].value == "none") {
+      alert("Please select suitable location or resource");
+    } 
+    else if (timeSelect.options[0].value == "Out of the remaining capacity") {
+      alert("Please select suitable quantity");
+    } 
+    else {
+      await fetcher(`${BASE_URL}/api/carts/ajax-cart/add.js`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          items: [
+            {
+              id: sku,
+              quantity: amount,
+              properties: [
+                {
+                  name: "Booking",
+                  // format('YYYY-MM-DD'),
+                  value: `${selectDay}`,
+                  type: "text",
+                },
+                // ...extra,
+                {
+                  name: "uniqueCode",
+                  value: ids,
+                  type: "text",
+                  show: true,
+                  export: true,
+                  extInfo: "",
+                },
+                {
+                  name: "planIds",
+                  // addressId_resourceId
+                  value: ids,
+                  type: "text",
+                  show: false,
+                  export: true,
+                  extInfo: "",
+                },
+              ],
+            },
+          ],
+        }),
+      })
+        .then((res) => {
+          logger.log("res: ", res);
+          // location.reload(); 重新加载显示增添
+          // 跳转
+          Shopline.event.emit("Cart::NavigateCart");
+          // location.href =`${BASE_URL}/cart`
+        })
+        .catch((err) => {
+          console.error("add to cart error: ", err);
+        });
+    }
+  });
+
+
 
   const resourceIndex = resource.selectedIndex;
   const gResourceValue = resource.options[resourceIndex].value;
-
-  // function getRightTime() {
-  //   let locationStart = "";
-  //   let locationEnd = "";
-  //   let resourceStart = "";
-  //   let resourceEnd = "";
-
-    
-  //   const locationValue = locationLabel.options[locationIndex].value;
-  //   // console.log(locations.options[locationIndex].value);
-  //   if (locationValue) {
-  //     const times = getTimes(locationValue, scheduleData.locations);
-  //     // console.log(times);
-  //     locationStart = times[0].start;
-  //     locationEnd = times[0].end;
-  //     // console.log("locationStart", locationStart);
-  //     // console.log("locationEnd", locationEnd);
-  //   } else {
-  //     locationStart = "00:00";
-  //     locationEnd = "24:00";
-  //   }
-
-  //   // 封装通过下拉框选中的地址找到对应的时间段\id\capacity
-  //   function getTimes(name, arr) {
-  //     return arr.find((item) => item.name == name).businessHours;
-  //   }
-
-  //   // console.log(resource.options[resourceIndex].value);
-
-  //   if (resourceValue) {
-  //     const times = getTimes(resourceValue, scheduleData.resources);
-  //     resourceStart = times[0].start;
-  //     resourceEnd = times[0].end;
-
-  //     // console.log("resourceStart", resourceStart);
-  //     // console.log("resourceEnd", resourceEnd);
-  //   } else {
-  //     resourceStart = "00:00";
-  //     resourceEnd = "24:00";
-  //   }
-
-  //   start = locationStart > resourceStart ? locationStart : resourceStart;
-  //   end = locationEnd < resourceEnd ? locationEnd : resourceEnd;
-  //   console.log(start);
-  //   console.log(end);
-
-  //   if (start < end) {
-  //     timeSelect.innerHTML += `<option selected disabled hidden>${start} - ${end} </option>`;
-  //     let timeDifference = end.substring(0, 2) - start.substring(0, 2);
-  //     for (let i = 0; i < timeDifference; i++) {
-  //       let updateStart = parseInt(start.substring(0, 2)) + 1 + ":" + "00";
-  //       timeSelect.innerHTML += `<option >${start} - ${updateStart} </option>`;
-  //       start = updateStart;
-  //     }
-  //   } else {
-  //     timeSelect.innerHTML = `<option selected disabled hidden>none</option>`;
-  //   }
-  //   // console.log((end)/1000);
-  //   // console.log(start.substring(0,2));
-  //   // console.log(end.substring(0,2)-start.substring(0,2));
-  //   // console.log(start.split(":").join(""));
-  //   // if(start.substring(0,2)<end.substring(0,2)){
-  //   // let i = 1;
-  //   //  let updateStart = [...(start.split(":").join(""))].splice(2,0,":").join("");
-  //   // let updateStart = [...(start.split(":").join(""))];
-  //   //  console.log(updateStart);
-
-  //   //  console.log(updateStart.splice(2,0,":").join(""));
-  //   // timeSelect.innerHTML += `<option >${start} - ${updateStart} </option>`
-  // }
   // 判断加购数量是否超过剩余数量
   function getCapacity(name, arr) {
     return arr.find((item) => item.name == name).capacity;
@@ -1025,102 +1030,9 @@ async function initBooking() {
 
   
 
-  const currentSchedule = scheduleData[days[0]][0];
-  const currentLocation = scheduleData.locations[0];
-  const currentResource = scheduleData.resources[0];
-  const ids = `${currentSchedule.id}_${currentSchedule.adminId}_${currentSchedule.productId}_${
-    currentSchedule.variantId
-  }_${(currentLocation === null || currentLocation === void 0 ? void 0 : currentLocation.id) || 0}_${
-    (currentResource === null || currentResource === void 0 ? void 0 : currentResource.id) || 0
-  }`;
-
-  localStorage.setItem("uniqueCode", ids);
-
-  bookButton.addEventListener("click", async () => {
-    console.log("Book Now",1);
-    if (timeSelect.options[0].value == "none") {
-      alert("Please select suitable location or resource");
-    } 
-    else if (timeSelect.options[0].value == "Out of the remaining capacity") {
-      alert("Please select suitable quantity");
-    } 
-    else {
-      await fetcher(`${BASE_URL}/api/carts/ajax-cart/add.js`, {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          items: [
-            {
-              id: sku,
-              quantity: amount,
-              properties: [
-                {
-                  name: "Booking",
-                  // format('YYYY-MM-DD'),
-                  value: `${selectDay}`,
-                  type: "text",
-                },
-                // ...extra,
-                {
-                  name: "uniqueCode",
-                  value: ids,
-                  type: "text",
-                  show: true,
-                  export: true,
-                  extInfo: "",
-                },
-                {
-                  name: "planIds",
-                  // addressId_resourceId
-                  value: ids,
-                  type: "text",
-                  show: false,
-                  export: true,
-                  extInfo: "",
-                },
-              ],
-            },
-          ],
-        }),
-      })
-        .then((res) => {
-          logger.log("res: ", res);
-          // location.reload(); 重新加载显示增添
-          // 跳转
-          Shopline.event.emit("Cart::NavigateCart");
-          // location.href =`${BASE_URL}/cart`
-        })
-        .catch((err) => {
-          console.error("add to cart error: ", err);
-        });
-    }
-  });
+  
   // window.Shoopline.event.emit('Cart::NavigateCart');
 }
 // 给button按钮绑定跳转
 
-
-
 initBooking();
-
-
-// async function main() {
-//   try {
-//       logger.log('booking start...');
-//       logger.log('current version: 1.3');
-//       await prepare();
-//       // await initShoplineEvent();
-//       await initBooking();
-//       // await injectDep();
-//       await injectDep();
-//       await resetEl();
-//       await initEvent();
-//       logger.log('booking end...');
-//   }
-//   catch (err) {
-//       logger.warn('booking error with ', err);
-//   }
-// }
-// main();
