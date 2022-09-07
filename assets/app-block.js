@@ -677,10 +677,10 @@ async function initBooking() {
 
   let sku;
 
-  window.Shopline.event.on("DataReport::ViewContent", ({ data }) => {
+ await window.Shopline.event.on("DataReport::ViewContent", ({ data }) => {
     sku = data.content_sku_id;
     
-    // console.log(" sku: ", sku);
+    console.log(" sku: ", sku);
   });
 
   // 请求预约日期信息
@@ -688,7 +688,7 @@ async function initBooking() {
     makeUrl("https://api.shopflex.io/reserve/sku/datePlanList", {
       platformProductId: product.id,
       platformVariantId: sku,
-    },{})
+    })
   )
     .then((res) => {
       if (res.code === 200) {
