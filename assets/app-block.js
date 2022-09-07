@@ -901,6 +901,26 @@ async function initBooking() {
   localStorage.setItem("uniqueCode", ids);
   console.log(ids);
 
+  const extra = [];
+            if (currentLocation) {
+                extra.push({
+                    name: 'Location',
+                    value: currentLocation.name,
+                    type: 'text',
+                    show: true,
+                    export: true,
+                });
+            }
+            if (currentResource) {
+                extra.push({
+                    name: 'Resource',
+                    value: currentResource.name,
+                    type: 'text',
+                    show: true,
+                    export: true,
+                });
+            }
+
 
   bookButton.addEventListener("click", async () => {
     console.log("Book Now",1);
@@ -929,14 +949,16 @@ async function initBooking() {
                   name: "Booking",
                   // format('YYYY-MM-DD'),
                   value: `${selectDay}`,
+                  show:true,
+                  export :true,
                   type: "text",
                 },
-                // ...extra,
+                ...extra,
                 {
                   name: "uniqueCode",
                   value: ids,
                   type: "text",
-                  show: true,
+                  show: false,
                   export: true,
                   extInfo: "",
                 },
