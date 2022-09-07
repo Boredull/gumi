@@ -650,7 +650,7 @@ function getProduct() {
 
 let getWeekDay;
 let weeks1;
-
+let sku;
 async function initBooking() {
   const product = await getProduct();
   // ctx.gProduct = product;
@@ -675,13 +675,15 @@ async function initBooking() {
     // document.querySelector(".product-button-list").style.display = "none";
   }
 
-  let sku;
-
- await window.Shopline.event.on("DataReport::ViewContent", ({ data }) => {
-    sku = data.content_sku_id;
-    
-    console.log(" sku: ", sku);
+  
+function getSku(){
+  window.Shopline.event.on("DataReport::ViewContent", ({ data }) => {
+    sku = data.content_sku_id;   
   });
+}
+ 
+  getSku();
+  console.log(" sku: ", sku);
 
   // 请求预约日期信息
   const scheduleData = await fetcher(
