@@ -808,7 +808,7 @@ async function initBooking() {
     console.log("weekTime", weekTime);
     if (weekTime.length == 0) {
       timeSelect.innerHTML = `<option selected disabled hidden>none</option>`;
-      alert("no suitable time");
+      // alert("no suitable time");
     } else {
       timeSelect.innerHTML = `<option selected disabled hidden>${weekTime[0].start} - ${weekTime[0].end} </option>`;
       let timeDifference = weekTime[0].end.substring(0, 2) - weekTime[0].start.substring(0, 2);
@@ -901,13 +901,13 @@ async function initBooking() {
   bookButton.addEventListener("click", async () => {
     console.log("Book Now",1);
     if (timeSelect.options[0].value == "none") {
-      alert("Please select suitable location or resource");
+      // alert("Please select suitable location or resource");
     } 
     // else if (timeSelect.options[0].value == "Out of the remaining capacity") {
     //   alert("Please select suitable quantity");
     // } 
     else if (amount > capacity) {
-      alert("Please select suitable quantity");
+      // alert("Please select suitable quantity");
     } 
     else {
       await fetcher(`${BASE_URL}/api/carts/ajax-cart/add.js`, {
@@ -992,7 +992,8 @@ console.log(gResourceValue);
     amount = document.querySelector(".stepper-input").value;
     console.log(amount);
     if (amount > capacity) {
-      alert(`The sales increase more than the remaining capacity ${capacity}`);
+      // alert(`The sales increase more than the remaining capacity ${capacity}`);
+      console.log(`The sales increase more than the remaining capacity ${capacity}`);
       timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
     } else {
       timeSelect.innerHTML = "";
@@ -1004,7 +1005,8 @@ console.log(gResourceValue);
     console.log(amount);
     if (amount > capacity) {
       timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
-      alert(`The sales increase more than the remaining capacity ${capacity}`);
+      // alert(`The sales increase more than the remaining capacity ${capacity}`);
+      console.log(`The sales increase more than the remaining capacity ${capacity}`);
     } else {
       timeSelect.innerHTML = "";
       // getRightTime();
@@ -1019,9 +1021,8 @@ console.log(gResourceValue);
     amount = document.querySelector(".stepper-input").value;
     console.log(amount);
     if (amount > capacity) {
-      alert(`The sales increase more than the remaining capacity ${capacity}`);
-      // return amount = 1;
-      // timeSelect.innerHTML = "";
+      // alert(`The sales increase more than the remaining capacity ${capacity}`);
+      console.log(`The sales increase more than the remaining capacity ${capacity}`);
       timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
       // return amount = 1;
     } else {
