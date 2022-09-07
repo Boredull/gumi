@@ -688,7 +688,7 @@ async function initBooking() {
     makeUrl("https://api.shopflex.io/reserve/sku/datePlanList", {
       platformProductId: product.id,
       platformVariantId: sku,
-    })
+    },{})
   )
     .then((res) => {
       if (res.code === 200) {
@@ -703,7 +703,9 @@ async function initBooking() {
       // warning(translation.failed_to_find_the_schedule);
       throw err;
     });
-  // console.log("scheduleData: ", JSON.stringify(scheduleData));
+
+
+  console.log("scheduleData: ", JSON.stringify(scheduleData));
 
   const schedules = scheduleData || {};
   const days = Object.keys(schedules).filter((date) => {
@@ -793,7 +795,9 @@ async function initBooking() {
   resource.innerHTML = scheduleData.resources.map((resource) => `<option >${resource.name}</option>`);
   locationLabel.innerHTML = scheduleData.locations.map((location) => `<option >${location.name}</option>`);
   // locationLabel.innerHTML += "<option> </option>";
-  resource.innerHTML += scheduleData.requireStatus == 1 ? "" : "<option> </option>";
+
+  // resource.innerHTML += scheduleData.requireStatus == 1 ? "" : "<option> </option>";
+
   // Price.innerHTML = `Price: ${product.price}`;
   // console.log(product.price);
   // let start = "";
