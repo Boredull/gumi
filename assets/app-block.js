@@ -660,26 +660,26 @@ async function initBooking() {
     document.querySelector(".theme-app-extension__app-block").style.display = "none";
     throw new Error("Failed to find current product: ");
   } else {
-    document.querySelector(".product-button-list").style.display = "none";
+    // document.querySelector(".product-button-list").style.display = "none";
   }
   if (!Array.isArray(product.tags)) {
     document.querySelector(".theme-app-extension__app-block").style.display = "none";
     throw new Error("Current product is not a booking product");
   } else {
-    document.querySelector(".product-button-list").style.display = "none";
+    // document.querySelector(".product-button-list").style.display = "none";
   }
   if (!product.tags.includes("booking")) {
     document.querySelector(".theme-app-extension__app-block").style.display = "none";
     throw new Error("Current product is not a booking product");
   } else {
-    document.querySelector(".product-button-list").style.display = "none";
+    // document.querySelector(".product-button-list").style.display = "none";
   }
 
   let sku;
 
   window.Shopline.event.on("DataReport::ViewContent", ({ data }) => {
     sku = data.content_sku_id;
-
+    document.querySelector(".product-button-list").style.display = "none";
     // console.log(" sku: ", sku);
   });
 
@@ -691,7 +691,10 @@ async function initBooking() {
     })
   )
     .then((res) => {
-      if (res.code === 200) return res.data;
+      if (res.code === 200) {
+
+        return res.data;
+      }
       return Promise.reject(
         new Error(`Failed to fetch schedule data, platformProductId = ${product.id}, platformVariantId = ${sku}`)
       );
@@ -779,7 +782,7 @@ async function initBooking() {
 
       const timeSelect = document.querySelector(".timeSelect");
       const locationLabel = document.querySelector(".location");
-      const resource = document.querySelector(".resource");
+      const resource = document.querySelector(".resource"); 
   // const Price = document.querySelector(".Price");
 
   // 显示下拉框内容
@@ -954,6 +957,7 @@ async function initBooking() {
         });
     }
   });
+
 
   const resourceIndex = resource.selectedIndex;
   const gResourceValue = resource.options[resourceIndex].value;
