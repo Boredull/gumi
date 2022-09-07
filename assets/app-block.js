@@ -955,8 +955,6 @@ async function initBooking() {
     }
   });
 
-
-
   const resourceIndex = resource.selectedIndex;
   const gResourceValue = resource.options[resourceIndex].value;
   // 判断加购数量是否超过剩余数量
