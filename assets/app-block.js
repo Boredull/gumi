@@ -679,7 +679,7 @@ async function initBooking() {
 
   window.Shopline.event.on("DataReport::ViewContent", ({ data }) => {
     sku = data.content_sku_id;
-    document.querySelector(".product-button-list").style.display = "none";
+    
     // console.log(" sku: ", sku);
   });
 
@@ -692,7 +692,7 @@ async function initBooking() {
   )
     .then((res) => {
       if (res.code === 200) {
-
+        document.querySelector(".product-button-list").style.display = "none";
         return res.data;
       }
       return Promise.reject(
@@ -719,7 +719,8 @@ async function initBooking() {
   select_location.style.display = scheduleData.locations.length == 0 ? "none" : "block";
   select_resource.style.display = scheduleData.resources.length == 0 ? "none" : "block";
 
-  // 找到昨天，让今天之前的日期不可选
+
+  // 判断周几
   function getMyDay(date){
     var week;
     if(date.getDay()==0) week="Sunday";
@@ -732,6 +733,8 @@ async function initBooking() {
     return week;
   }
 
+  
+  // 找到昨天，让今天之前的日期不可选
   const today = new Date();
   const yesterday = new Date(today);
   const bookButton = document.querySelector(".bookButton");
@@ -783,6 +786,7 @@ async function initBooking() {
       const timeSelect = document.querySelector(".timeSelect");
       const locationLabel = document.querySelector(".location");
       const resource = document.querySelector(".resource"); 
+
   // const Price = document.querySelector(".Price");
 
   // 显示下拉框内容
@@ -821,8 +825,6 @@ async function initBooking() {
     return arr.find((item) => item.name == name).times;
   }
   
-
-
   
   function messageTime() {
     let weeks2;
@@ -901,7 +903,10 @@ async function initBooking() {
     if (timeSelect.options[0].value == "none") {
       alert("Please select suitable location or resource");
     } 
-    else if (timeSelect.options[0].value == "Out of the remaining capacity") {
+    // else if (timeSelect.options[0].value == "Out of the remaining capacity") {
+    //   alert("Please select suitable quantity");
+    // } 
+    else if (amount > capacity) {
       alert("Please select suitable quantity");
     } 
     else {
@@ -946,7 +951,7 @@ async function initBooking() {
         }),
       })
         .then((res) => {
-          logger.log("res: ", res);
+          console.log("res: ", res);
           // location.reload(); 重新加载显示增添
           // 跳转
           Shopline.event.emit("Cart::NavigateCart");
@@ -958,28 +963,29 @@ async function initBooking() {
     }
   });
 
-
-  const resourceIndex = resource.selectedIndex;
-  const gResourceValue = resource.options[resourceIndex].value;
+console.log(1);
+  const gResourceIndex = resource.selectedIndex;
+  const gResourceValue = resource.options[gResourceIndex].value;
   // 判断加购数量是否超过剩余数量
   function getCapacity(name, arr) {
     return arr.find((item) => item.name == name).capacity;
   }
 
   // getRightTime();
-
+console.log(gResourceValue);
   let capacity;
   let amount = 1;
   const stepper_before = document.querySelector(".stepper-before");
   const stepper_after = document.querySelector(".stepper-after");
   const stepper_input = document.querySelector(".stepper-input");
 
-  if (gResourceValue) {
-    return (capacity = getCapacity(gResourceValue, scheduleData.resources));
-  } else {
-    capacity = 0;
-  }
+  // if (gResourceValue) {
+  //   return (capacity = getCapacity(gResourceValue, scheduleData.resources));
+  // } else {
+  //   capacity = 0;
+  // }
 
+  capacity = !gResourceValue ? 0 : getCapacity(gResourceValue, scheduleData.resources)
   console.log(capacity);
 
   stepper_after.addEventListener("click", () => {
@@ -987,16 +993,11 @@ async function initBooking() {
     console.log(amount);
     if (amount > capacity) {
       alert(`The sales increase more than the remaining capacity ${capacity}`);
-      // stepper_after.style.pointerEvents = "none";
-      // timeSelect.innerHTML = "";
       timeSelect.innerHTML = `<option selected disabled hidden>Out of the remaining capacity</option>`;
-      // return amount = 1;
     } else {
-      // stepper_after.style.pointerEvents = "auto";
-      // stepper_before.style.pointerEvents = "auto";
       timeSelect.innerHTML = "";
-      // getRightTime();
     }
+
   });
   stepper_before.addEventListener("click", () => {
     amount = document.querySelector(".stepper-input").value;
@@ -1027,6 +1028,9 @@ async function initBooking() {
       timeSelect.innerHTML = "";
       // getRightTime();
     }
+    messageTime();
+    display();
+
   });
 
 
