@@ -692,7 +692,9 @@ async function initBooking() {
   )
     .then((res) => {
       if (res.code === 200) {
-        document.querySelector(".product-button-list").style.display = "none";
+        // if(document.querySelector(".product-button-list")){
+        //    document.querySelector(".product-button-list").style.display = "none";
+        // }
         return res.data;
       }
       return Promise.reject(
