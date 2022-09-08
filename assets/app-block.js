@@ -678,10 +678,9 @@ async function initBooking() {
   
 function getSku(){
   window.Shopline.event.on("DataReport::ViewContent", ({ data }) => {
-    sku = data.content_sku_id;   
+   return sku = data.content_sku_id;   
   });
 }
- 
   getSku();
   console.log(" sku: ", sku);
 
@@ -838,6 +837,7 @@ function getSku(){
     let weeks2;
     const locationIndex = locationLabel.selectedIndex;
     const locationValue = locationLabel.options[locationIndex].value;
+    console.log("locationValue",locationValue);
     const resourceIndex = resource.selectedIndex;
     const resourceValue = resource.options[resourceIndex].value;
     if (locationValue && resourceValue) {
